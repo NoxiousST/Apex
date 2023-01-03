@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkBackground"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/actionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        app:liftOnScroll="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/arrow_left"
+            app:navigationIconTint="@color/white"
+            app:title="Keranjang"
+            app:titleCentered="true"
+            app:titleTextColor="@color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <RelativeLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/actionBar"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/m16">
+
+        <TextView
+            android:id="@+id/items"
+            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nexabold"
+            android:text="Total 0 items"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/items"
+            android:paddingBottom="@dimen/m4"
+            android:layout_marginTop="@dimen/m8"
+            android:scrollbars="none">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/itemRV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingHorizontal="@dimen/m4"
+                android:paddingBottom="64dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="1" />
+
+        </androidx.core.widget.NestedScrollView>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/detail"
+        android:layout_alignBottom="@id/content"
+        android:layout_above="@id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/darkBackground"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/m12"
+            android:paddingHorizontal="@dimen/m16"
+            android:translationZ="@dimen/m4"
+            app:dividerColor="#2b384d"
+            app:dividerThickness="2dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/m16"
+                android:paddingVertical="@dimen/m8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:fontFamily="@font/nexa_regular"
+                        android:text="Subtotal"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/subTotal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:fontFamily="@font/nexa_regular"
+                        android:text="Subtotal"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:fontFamily="@font/nexa_regular"
+                        android:text="Pengiriman"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/deliverAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:fontFamily="@font/nexa_regular"
+                        android:layout_centerVertical="true"
+                        android:text="Pengiriman"
+                        android:layout_alignParentEnd="true"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:fontFamily="@font/nexa_regular"
+                        android:text="Pajak"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/tax"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:fontFamily="@font/nexa_regular"
+                        android:text="Pajak"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:fontFamily="@font/nexabold"
+                        android:text="Total"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+                    <TextView
+                        android:id="@+id/totalAmount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:fontFamily="@font/nexabold"
+                        android:text="Total"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/m12"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/toCheckout"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="0dp"
+                android:backgroundTint="@color/blue"
+                android:elegantTextHeight="true"
+                android:fontFamily="@font/nexabold"
+                android:includeFontPadding="false"
+                android:paddingVertical="@dimen/m8"
+                android:paddingStart="@dimen/m42"
+                android:text="Checkout"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                app:cornerRadius="@dimen/m12"
+                app:icon="@drawable/arrow_right"
+                app:iconGravity="end"
+                app:iconPadding="0dp"
+                app:iconSize="@dimen/m32" />
+
+            <com.google.android.material.button.MaterialButton
+                android:visibility="gone"
+                android:id="@+id/toMap"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/m12"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:translationZ="@dimen/m4"
+                app:cornerRadius="@dimen/m12"
+                app:elevation="@dimen/m16"
+                app:backgroundTint="@color/blue"
+                app:icon="@drawable/truck"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="28dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sheet_root"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:background="@color/darkBackground"
+        android:paddingHorizontal="@dimen/m16"
+        android:paddingBottom="@dimen/m16">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/m16"
+            android:fontFamily="@font/nexa_regular"
+            android:paddingVertical="@dimen/m8"
+            android:text="Barang berhasil ditambahkan ke keranjang"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/m12">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/accentBackground">
+
+                <ImageView
+                    android:id="@+id/img_sheet"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/m12"
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/ic_launcher" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="@dimen/m4"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical"
+                    android:layout_toEndOf="@id/img_sheet">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/item_name_sheet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nexabold"
+                        android:text="Item Name"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/item_price_sheet"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/item_name_sheet"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:fontFamily="@font/nexabold"
+                        android:text="Item Price"
+                        android:textColor="@color/white"
+                        android:textSize="24sp" />
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/toCart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/m16"
+            android:backgroundTint="@color/blue"
+            android:fontFamily="@font/nexabold"
+            android:paddingVertical="@dimen/m12"
+            android:text="Lihat Keranjang"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            app:cornerRadius="@dimen/m8"
+            app:icon="@drawable/shopping_bag"
+            app:iconGravity="textStart" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

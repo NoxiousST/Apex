@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/menu"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/changeBackgroundColor"
+        app:boxBackgroundColor="@color/darkBackground"
+        app:endIconTint="@color/green"
+        app:boxStrokeColor="@drawable/add_line_selector"
+        app:hintTextColor="@drawable/add_line_selector">
+
+        <AutoCompleteTextView
+            android:id="@+id/actv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nexabold"
+            android:inputType="none" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:boxBackgroundColor="@color/darkBackground"
+        app:boxStrokeColor="@drawable/add_line_selector"
+        app:suffixTextColor="@color/green"
+        app:hintTextColor="@drawable/add_line_selector"
+        app:suffixTextAppearance="@font/nexabold">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nexabold" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+</LinearLayout>

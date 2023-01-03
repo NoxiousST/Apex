@@ -1,0 +1,10 @@
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fontFamily="@font/nexabold"
+    android:paddingVertical="@dimen/m8"
+    android:paddingHorizontal="@dimen/m24"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1">
+</TextView>

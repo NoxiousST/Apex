@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@color/darkBackground"
+    android:elevation="0dp"
+    app:cardCornerRadius="@dimen/m12">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="@dimen/m4">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/add"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="@dimen/m4"
+            android:background="@drawable/add_gradient_menu"
+            android:drawableStart="@drawable/focus_add"
+            android:gravity="center"
+            android:drawableTint="@color/white"
+            android:padding="14dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Circle" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/upd"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="@dimen/m4"
+            android:background="@drawable/edit_gradient_menu"
+            android:drawableStart="@drawable/edit_alt"
+            android:gravity="center"
+            android:drawableTint="@color/white"
+            android:padding="14dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Circle" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/dlt"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginHorizontal="@dimen/m4"
+            android:background="@drawable/delete_gradient_menu"
+            android:drawableStart="@drawable/trash_alt"
+            android:gravity="center"
+            android:drawableTint="@color/white"
+            android:padding="14dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyApp.Button.Circle" />
+
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

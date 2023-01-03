@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkBackground"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="@dimen/m24">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="180dp"
+            android:layout_marginVertical="@dimen/m24"
+            android:src="@drawable/send_email" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/m16"
+            android:fontFamily="@font/nexabold"
+            android:text="Verify Email"
+            android:textColor="@color/white"
+            android:textSize="36sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/adambold"
+            android:text="We have sent you a verification code to your email address."
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/m24"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/m8"
+                android:layout_marginVertical="@dimen/m8"
+                app:boxBackgroundColor="@color/accentBackground"
+                app:boxCornerRadiusBottomEnd="@dimen/m16"
+                app:boxCornerRadiusBottomStart="@dimen/m16"
+                app:boxCornerRadiusTopEnd="@dimen/m16"
+                app:boxCornerRadiusTopStart="@dimen/m16"
+                app:boxStrokeColor="@drawable/line_selector"
+                app:errorEnabled="false"
+                app:hintEnabled="false"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/first"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nexabold"
+                    android:gravity="center"
+                    android:inputType="numberSigned"
+                    android:maxLength="1"
+                    android:nextFocusRight="@id/second"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/m8"
+                android:layout_marginVertical="@dimen/m8"
+                app:boxBackgroundColor="@color/accentBackground"
+                app:boxCornerRadiusBottomEnd="@dimen/m16"
+                app:boxCornerRadiusBottomStart="@dimen/m16"
+                app:boxCornerRadiusTopEnd="@dimen/m16"
+                app:boxCornerRadiusTopStart="@dimen/m16"
+                app:boxStrokeColor="@drawable/line_selector"
+                app:errorEnabled="false"
+                app:hintEnabled="false"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/second"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nexabold"
+                    android:gravity="center"
+                    android:nextFocusRight="@id/third"
+                    android:inputType="numberSigned"
+                    android:letterSpacing=".025"
+                    android:maxLength="1"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/m8"
+                android:layout_marginVertical="@dimen/m8"
+                app:boxBackgroundColor="@color/accentBackground"
+                app:boxCornerRadiusBottomEnd="@dimen/m16"
+                app:boxCornerRadiusBottomStart="@dimen/m16"
+                app:boxCornerRadiusTopEnd="@dimen/m16"
+                app:boxCornerRadiusTopStart="@dimen/m16"
+                app:boxStrokeColor="@drawable/line_selector"
+                app:errorEnabled="false"
+                app:hintEnabled="false"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/third"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nexabold"
+                    android:gravity="center"
+                    android:inputType="numberSigned"
+                    android:maxLength="1"
+
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/m8"
+                android:layout_marginVertical="@dimen/m8"
+                app:boxBackgroundColor="@color/accentBackground"
+                app:boxCornerRadiusBottomEnd="@dimen/m16"
+                app:boxCornerRadiusBottomStart="@dimen/m16"
+                app:boxCornerRadiusTopEnd="@dimen/m16"
+                app:boxCornerRadiusTopStart="@dimen/m16"
+                app:boxStrokeColor="@drawable/line_selector"
+                app:errorEnabled="false"
+                app:hintEnabled="false"
+                app:hintTextColor="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/four"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nexabold"
+                    android:gravity="center"
+                    android:inputType="numberSigned"
+                    android:maxLength="1"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/m16"
+            android:fontFamily="@font/nexabold"
+            android:text="Resend Code?"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/m24"
+        android:backgroundTint="@color/blue"
+        android:fontFamily="@font/nexabold"
+        android:paddingVertical="@dimen/m8"
+        android:text="Verify"
+        android:textAllCaps="false"
+        android:textColor="@color/whiteAccent"
+        android:textFontWeight="900"
+        android:textSize="22sp"
+        app:cornerRadius="@dimen/m24" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

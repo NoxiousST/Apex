@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "479300167413",
+    "firebase_url": "https://apex-7c1a4-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "apex-7c1a4",
+    "storage_bucket": "apex-7c1a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479300167413:android:396a59867c57e7ce8947bc",
+        "android_client_info": {
+          "package_name": "com.test.apex"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "479300167413-st3g3qh2ultk9t0611br88lujh5gfvkh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.test.apex",
+            "certificate_hash": "68e0e1880ce94bb76f2453c37e54933e05d196d5"
+          }
+        },
+        {
+          "client_id": "479300167413-0mojnom7q6h187soe123bbd34bi06k9b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZGobiNp2BwyOE4lXI7A3Qztq1-pzfuh0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "479300167413-0mojnom7q6h187soe123bbd34bi06k9b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

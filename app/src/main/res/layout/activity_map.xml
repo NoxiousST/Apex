@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkBackground">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/actionBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent"
+        app:liftOnScroll="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/arrow_left"
+            app:navigationIconTint="@color/white"
+            app:title="Pengiriman"
+            app:titleCentered="true"
+            app:titleTextColor="@color/white" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/actionBar"
+        android:indeterminate="true"
+        android:translationZ="2dp"
+        app:hideAnimationBehavior="outward"
+        app:indicatorColor="@color/darkBackground"
+        app:indicatorDirectionLinear="startToEnd"
+        app:showAnimationBehavior="inward"
+        app:trackColor="@color/blue" />
+
+
+    <LinearLayout
+        android:id="@+id/mapLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/indicator"
+        android:layout_marginTop="@dimen/m8"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/dropdownInput"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/m12"
+                android:layout_marginEnd="@dimen/m12"
+                android:hint="Kota dan Provinsi"
+                app:boxBackgroundColor="@color/accentBackground"
+                app:boxCornerRadiusBottomEnd="@dimen/m8"
+                app:boxCornerRadiusBottomStart="@dimen/m8"
+                app:boxCornerRadiusTopEnd="@dimen/m8"
+                app:boxCornerRadiusTopStart="@dimen/m8"
+                app:boxStrokeColor="@color/accentBackground"
+                app:endIconDrawable="@drawable/plus_circle"
+                app:endIconTint="@color/whiteAccent"
+                app:hintEnabled="true">
+
+                <AutoCompleteTextView
+                    android:id="@+id/inputKotaTujuan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nexabold"
+                    android:maxLines="5"
+                    android:padding="@dimen/m16" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/setMap"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:layout_alignBottom="@id/dropdownInput"
+                android:layout_alignParentEnd="true"
+                android:layout_marginHorizontal="@dimen/m12"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:translationZ="@dimen/m4"
+                app:backgroundTint="@color/blue"
+                app:cornerRadius="@dimen/m8"
+                app:elevation="@dimen/m16"
+                app:icon="@drawable/leku_ic_maps"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="@dimen/m32" />
+
+
+        </RelativeLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/m12">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/layout_rounded_radius"
+                android:orientation="vertical"
+                android:padding="@dimen/m24">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/m12"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/musticaprosemibold"
+                        android:text="Username"
+                        android:textColor="@color/whiteAccent"
+                        android:textSize="18sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/leku_ic_check_light"
+                        app:tint="@color/green" />
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/mapAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/louis_george_cafe_bold"
+                    android:text="-"
+                    android:textColor="@color/whiteAccent"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/jasaPengiriman"
+        android:layout_below="@id/mapLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m4"
+        android:layout_marginHorizontal="@dimen/m12"
+        android:fontFamily="@font/musticaprosemibold"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:text="Jasa Pengiriman"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/viewCourier"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/jasaPengiriman"
+        android:layout_marginTop="@dimen/m4"
+        android:layout_marginHorizontal="@dimen/m8"
+
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvMain"
+            android:paddingBottom="86dp"
+            android:clipToPadding="false"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/list_item_main" />
+
+    </androidx.core.widget.NestedScrollView>
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/confirm_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/m16"
+        android:layout_marginTop="@dimen/m16"
+        android:layout_marginEnd="@dimen/m16"
+        android:layout_marginBottom="@dimen/m16"
+        android:fontFamily="@font/nexabold"
+        android:letterSpacing="0"
+        android:paddingStart="@dimen/m56"
+        android:text="Konfirmasi"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/whiteAccent"
+        android:textFontWeight="900"
+        android:textSize="20sp"
+        app:backgroundTint="@color/blue"
+        app:cornerRadius="@dimen/m8"
+        app:icon="@drawable/check"
+        app:iconGravity="end"
+        app:iconPadding="0dp"
+        app:iconSize="@dimen/m36"
+        app:iconTint="@color/whiteAccent" />
+
+</RelativeLayout>

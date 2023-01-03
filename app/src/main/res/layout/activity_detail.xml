@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_edit">
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/onLoad"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_weight="8"
+        android:background="@color/darkBackground"
+        android:gravity="center"
+        android:translationZ="@dimen/m4">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="match_parent"
+            android:layout_height="128dp"
+            android:layout_alignParentTop="true"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/logoapex"
+            android:tint="@color/whiteAccent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/icon"
+            android:fontFamily="@font/comfortaa_bold"
+            android:gravity="center"
+            android:text="Apex"
+            android:textColor="@color/whiteAccent"
+            android:textSize="36sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/actionBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/transparent"
+            app:liftOnScroll="true">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/topAppBar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:menu="@menu/menu_main"
+                app:navigationIcon="@drawable/menu"
+                app:navigationIconTint="@color/white"
+                app:popupTheme="@color/accentBackground"
+                app:title="Apex"
+                app:titleCentered="true"
+                app:titleTextColor="@color/white" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <ScrollView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/actionBar"
+            android:paddingHorizontal="@dimen/m24"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/gradientLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/m4"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/nmTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nexabold"
+                        android:text="@string/eItemName"
+                        android:textColor="@color/white"
+                        android:textSize="28sp" />
+
+                    <TextView
+                        android:id="@+id/tpTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/m4"
+                        android:fontFamily="@font/nexa_regular"
+                        android:text="@string/eItemType"
+                        android:textColor="@color/white"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:padding="@dimen/m24"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/nike_def" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/hrgTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:fontFamily="@font/nexabold"
+                            android:text="@string/eItemPrice"
+                            android:textColor="@color/white"
+                            android:textSize="30sp" />
+
+                        <ToggleButton
+                            android:id="@+id/wishBtn"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/toggle_wishlist"
+                            android:gravity="center"
+                            android:textOff=""
+                            android:textOn="" />
+
+                    </RelativeLayout>
+
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:dividerColor="@color/accentBackground" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nexatext_trial_black"
+                            android:text="Product Detail"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:baselineAligned="false"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="@dimen/m4"
+                                android:layout_weight="2"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/nexatext_trial_book"
+                                    android:text="@string/condition"
+                                    android:textColor="@color/white"
+                                    android:textFontWeight="900"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/nexatext_trial_book"
+                                    android:text="@string/manufacter"
+                                    android:textColor="@color/white"
+                                    android:textFontWeight="900"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/nexatext_trial_book"
+                                    android:text="@string/weight"
+                                    android:textColor="@color/white"
+                                    android:textFontWeight="900"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/nexatext_trial_book"
+                                    android:text="@string/color"
+                                    android:textColor="@color/white"
+                                    android:textFontWeight="900"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/nexatext_trial_book"
+                                    android:text="@string/stock"
+                                    android:textColor="@color/white"
+                                    android:textFontWeight="900"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginVertical="@dimen/m4"
+                                android:layout_weight="3"
+                                android:orientation="vertical">
+
+
+                                <TextView
+                                    android:id="@+id/con"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/nexabold"
+                                    android:text="@string/eItemCondition"
+                                    android:textColor="@color/white"
+                                    android:textFontWeight="900"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/mnf"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/nexabold"
+                                    android:text="@string/eItemManufacter"
+                                    android:textColor="@color/white"
+                                    android:textFontWeight="900"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/wgh"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/nexabold"
+                                    android:text="@string/eItemWeight"
+                                    android:textColor="@color/white"
+                                    android:textFontWeight="900"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/clr"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/nexabold"
+                                    android:text="@string/eItemColor"
+                                    android:textColor="@color/white"
+                                    android:textFontWeight="900"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/stk"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:background="@android:color/transparent"
+                                    android:fontFamily="@font/nexabold"
+                                    android:text="@string/eItemStock"
+                                    android:textColor="@color/white"
+                                    android:textFontWeight="900"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        app:dividerColor="@color/accentBackground" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="@dimen/m4"
+                        android:paddingBottom="@dimen/m64"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/nexatext_trial_black"
+                            android:text="Product Description"
+                            android:textColor="@color/white"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/descTxt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="@dimen/m4"
+                            android:background="@android:color/transparent"
+                            android:fontFamily="@font/louis_george_cafe_bold"
+                            android:lineHeight="18dp"
+                            android:text="Sistem Akustik Nova menggabungkan perangkat keras dan perangkat lunak untuk Audio Mahakuasa dan pencelupan murni, dengan fitur nirkabel yang kuat untuk pengalaman luar biasa."
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            tools:targetApi="o" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </ScrollView>
+
+        <com.google.android.material.button.MaterialButton
+            app:backgroundTint="@color/blue"
+            android:id="@+id/addCart"
+            android:layout_width="@dimen/m56"
+            android:layout_height="@dimen/m56"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
+            android:layout_marginHorizontal="@dimen/m24"
+            android:layout_marginVertical="@dimen/m16"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:translationZ="@dimen/m4"
+            app:cornerRadius="@dimen/m12"
+            app:elevation="@dimen/m16"
+            app:icon="@drawable/shopping_bag"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="@dimen/m36" />
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/BottomSheetStyle"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

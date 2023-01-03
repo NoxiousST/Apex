@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">apex</string>
+
+    <string name="isItemName">&lt;Product name&gt;</string>
+    <string name="isItemPrice">&lt;Product price&gt;</string>
+
+    <string name="eItemName">Set Product Name</string>
+    <string name="eItemType">Set Product Type</string>
+    <string name="eItemPrice">Set Product Price</string>
+    <string name="eItemDetail">Set Product Detail</string>
+    <string name="eItemDescription">Set Product Description</string>
+    <string name="eItemCondition">Set Condition</string>
+    <string name="eItemManufacter">Set Manufacter</string>
+    <string name="eItemWeight">Set Weight</string>
+    <string name="eItemColor">Set Color</string>
+
+    <string name="eCon">Product condition</string>
+    <string name="eMnf">Product manufacter</string>
+    <string name="eWgh">Product weight</string>
+    <string name="eClr">Product color</string>
+    <string name="eStk">Product stock</string>
+
+    <string name="item_name1">Nike Pegasus 33</string>
+    <string name="item_price1">Rp 1,829,000</string>
+    <string name="item_type1">Road Running Shoes</string>
+
+    <string name="item_condition1">New</string>
+    <string name="item_manufacter1">Nike</string>
+    <string name="item_weight1">1000g</string>
+    <string name="item_color1">Green</string>
+
+    <string name="item_desc1">Men\'s Nike Air Zoom Pegasus 33 Running Shoe delivers a smooth, snappy ride with a finely tuned outsole that features impact absorbing cuts within the crash rail, Waffle pistons and a radiused heel.</string>
+    <string name="image_description">item_image</string>
+    <string name="image_selection">Select Image</string>
+    <string name="image_placeholder">Image Placeholder</string>
+    <string name="condition">Condition</string>
+    <string name="manufacter">Manufacter</string>
+    <string name="weight">Weight</string>
+    <string name="color">Color</string>
+    <string name="product_description_content">-Product Description-</string>
+    <string name="product_name">Product Name</string>
+    <string name="product_type">Product Type</string>
+    <string name="product_price">Product Price</string>
+    <string name="product_detail">Product Detail</string>
+    <string name="product_description">Product Description</string>
+    <string name="save_to_database">Save To Database</string>
+    <string name="clear_changes">Clear Changes</string>
+    <string name="toggle_menu">Toggle Menu</string>
+    <string name="save_changes">Do you want to save current changes?</string>
+    <string name="alert">Alert!</string>
+    <string name="save">Save</string>
+    <string name="clear">Clear</string>
+    <string name="clear_current_changes">Do you want to clear current changes?</string>
+    <string name="go_back">Are you sure want to leave this page?</string>
+    <string name="delete_product">Do you want to delete this item?</string>
+    <string name="proceed">Proceed</string>
+    <string name="delete">Delete</string>
+    <string name="eItemStock">Set Stock</string>
+    <string name="stock">Stock</string>
+
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+
+    <string name="google_maps_key">AIzaSyBZfs7zuN2I-7bNoOAIbG4goQtqlHo3YF8</string>
+    <string name="map_id">802a12ebdd403a82</string>
+</resources>

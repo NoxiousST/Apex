@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardCV"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/m12"
+    android:background="@drawable/main_shoe_bg"
+    app:cardCornerRadius="@dimen/m12">
+
+    <ImageView
+        android:layout_width="240dp"
+        android:layout_height="280dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/shoe_main_bg" />
+
+    <ImageView
+        android:id="@+id/item_brand"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/m16"
+        android:src="@drawable/chevron_forward"
+        app:tint="@color/white" />
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_margin="@dimen/m16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m4"
+        android:fontFamily="@font/nexabold"
+        android:text="Product Name"
+        android:textColor="@color/white"
+        android:textSize="28sp" />
+
+    <ImageView
+        android:id="@+id/item_image"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_gravity="center"
+        android:src="@drawable/main_shoe" />
+
+    <TextView
+        android:id="@+id/item_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="@dimen/m16"
+        android:fontFamily="@font/nexabold"
+        android:text="Product Price"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+</com.google.android.material.card.MaterialCardView>

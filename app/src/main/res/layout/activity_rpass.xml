@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/darkBackground"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="@dimen/m24">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="220dp"
+            android:layout_marginBottom="@dimen/m32"
+            android:src="@drawable/reset" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/m16"
+            android:fontFamily="@font/nexabold"
+            android:text="Reset Password"
+            android:textColor="@color/white"
+            android:textSize="36sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/adambold"
+            android:layout_marginVertical="@dimen/m8"
+            android:text="Your new password must be different from previously used password."
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/m24"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textLayoutPassword"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/m8"
+                android:layout_marginTop="@dimen/m8"
+                android:hint="Password"
+                android:textColorHint="@color/white"
+                app:boxBackgroundColor="@color/accentBackground"
+                app:boxCornerRadiusBottomEnd="@dimen/m16"
+                app:boxCornerRadiusBottomStart="@dimen/m16"
+                app:boxCornerRadiusTopEnd="@dimen/m16"
+                app:boxCornerRadiusTopStart="@dimen/m16"
+                app:boxStrokeColor="@drawable/line_selector"
+                app:hintTextColor="@color/white"
+                app:startIconDrawable="@drawable/chevron_forward"
+                app:startIconTint="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nexabold"
+                    android:inputType="textPassword"
+                    android:letterSpacing=".025"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textLayoutRePassword"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/m8"
+                android:layout_marginTop="@dimen/m8"
+                android:hint="Confirm Password"
+                android:textColorHint="@color/white"
+                app:boxBackgroundColor="@color/accentBackground"
+                app:boxCornerRadiusBottomEnd="@dimen/m16"
+                app:boxCornerRadiusBottomStart="@dimen/m16"
+                app:boxCornerRadiusTopEnd="@dimen/m16"
+                app:boxCornerRadiusTopStart="@dimen/m16"
+                app:boxStrokeColor="@drawable/line_selector"
+                app:hintTextColor="@color/white"
+                app:startIconDrawable="@drawable/chevron_forward"
+                android:layout_marginBottom="@dimen/m24"
+                app:startIconTint="@color/white">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextRePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nexabold"
+                    android:inputType="textPassword"
+                    android:letterSpacing=".025"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/m24"
+        android:backgroundTint="@color/blue"
+        android:fontFamily="@font/nexabold"
+        android:paddingVertical="@dimen/m8"
+        android:text="Save"
+        android:textAllCaps="false"
+        android:textColor="@color/whiteAccent"
+        android:textFontWeight="900"
+        android:textSize="22sp"
+        app:cornerRadius="@dimen/m24" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
