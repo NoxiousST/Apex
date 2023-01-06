@@ -74,8 +74,8 @@ public class TextScrollAdapter extends RecyclerView.Adapter<TextScrollAdapter.Sc
         condition.add("Used");
 
         ArrayList<String> manufacter = new ArrayList<>();
-        manufacter.add("Nike");
-        manufacter.add("Adidas");
+        manufacter.add("SteelSeries");
+        manufacter.add("Razer");
         Toast.makeText(mcontext, ""+position, Toast.LENGTH_SHORT).show();
         if (!change) {
             conTxt = detail.get(0);

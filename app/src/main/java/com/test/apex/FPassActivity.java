@@ -1,4 +1,4 @@
-package com.test.apex.accounts;
+package com.test.apex;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,12 +9,12 @@ import com.test.apex.StatusBar;
 
 import java.util.Objects;
 
-public class EmailActivity extends AppCompatActivity {
+public class FPassActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_email);
+        setContentView(R.layout.activity_fpass);
         Objects.requireNonNull(getSupportActionBar()).hide();
         new StatusBar().statusBar(this);
         getWindow().setNavigationBarColor(getResources().getColor(R.color.darkBackground));

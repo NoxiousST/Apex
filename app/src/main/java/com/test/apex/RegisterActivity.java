@@ -1,4 +1,4 @@
-package com.test.apex.accounts;
+package com.test.apex;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,12 +18,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.test.apex.ui.Products.HomeActivity;
-import com.test.apex.User;
-import com.test.apex.R;
-import com.test.apex.RequestHandler;
 import com.test.apex.network.ServerAPI;
-import com.test.apex.SharedPrefManager;
-import com.test.apex.StatusBar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -132,10 +127,11 @@ public class RegisterActivity extends AppCompatActivity {
 
                         JSONObject userJson = obj.getJSONObject("user");
                         User user = new User(
-                                userJson.getInt("id"),
+                                userJson.getString("id"),
                                 userJson.getString("username"),
                                 userJson.getString("email"),
-                                userJson.getString("password")
+                                userJson.getString("password"),
+                                "MySQL"
                         );
                         SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
 

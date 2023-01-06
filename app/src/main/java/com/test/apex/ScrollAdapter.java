@@ -3,6 +3,7 @@ package com.test.apex;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.card.MaterialCardView;
 import com.test.apex.ui.Products.Product;
 
@@ -45,6 +52,7 @@ public class ScrollAdapter extends RecyclerView.Adapter<ScrollAdapter.ScrollView
         Product recyclerData = mainArrayList.get(position);
         holder.itemName.setText(recyclerData.getProductName());
         holder.itemPrice.setText(format.format(recyclerData.getproductPrice()));
+        Glide.with(mcontext).load(recyclerData.getproductImage()).into(holder.itemImage);
     }
 
     @Override

@@ -26,10 +26,9 @@ public class CartFirebase {
     public void addCart(Context context, Cart newCart) {
         User user = SharedPrefManager.getInstance(context).getUser();
         String userID = String.valueOf(user.getId());
-        DatabaseReference mRef = mDatabase.child(userID).child(newCart.getproductId());
+        DatabaseReference mRef = mDatabase.child(userID);
+        mRef.child(newCart.getproductId()).setValue(newCart.toMap());
 
-        mRef.child("productId").setValue(newCart.getproductId());
-        mRef.child("productQuantity").setValue(newCart.getproductQuantity());
 
     }
 

@@ -13,10 +13,12 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -33,6 +35,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import com.facebook.login.LoginManager;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -47,16 +54,18 @@ import com.test.apex.R;
 import com.test.apex.ReceivePosition;
 import com.test.apex.ScrollAdapter;
 import com.test.apex.SharedPrefManager;
+import com.test.apex.UpdateUserActivity;
 import com.test.apex.VolleyOnEventListener;
 import com.test.apex.VolleyServerRequest;
 import com.test.apex.User;
+import com.test.apex.LoginActivity;
 import com.test.apex.network.ServerAPI;
 import com.yarolegovich.discretescrollview.DSVOrientation;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
 import com.yarolegovich.discretescrollview.transform.Pivot;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, ReceivePosition {
+public class HomeActivity extends AppCompatActivity implements ReceivePosition {
 
     private DiscreteScrollView itemPicker;
     private ArrayList<Product> productArrayList;
@@ -67,7 +76,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private RecyclerViewAdapter adapter;
     private DrawerLayout drawerLayout;
     private MaterialToolbar topAppBar;
-    private User user;
+    private User user = new User();
     private NavigationView navigationView;
     private View headView;
     private int listPosition;
@@ -79,6 +88,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     NumberFormat format = NumberFormat.getNumberInstance(locale);
     TickerView tickerView;
     RelativeLayout layoutBtn;
+
+    GoogleSignInOptions gso;
+    GoogleSignInClient gsc;
+    boolean logout = false;
 
     @SuppressLint("NonConstantResourceId")
     @Override
@@ -93,7 +106,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationView = findViewById(R.id.navigationView);
         layoutBtn = findViewById(R.id.layoutBtn);
         tickerView = findViewById(R.id.tickerView);
-        navigationView.setNavigationItemSelectedListener(this);
 
         toCart = findViewById(R.id.toCart);
 
@@ -104,8 +116,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     startActivity(new Intent(HomeActivity.this, KeranjangActivity.class));
                     break;
                 case R.id.logout:
+                    if (!isLogout(this, user.getLoginOption())) {
+                        return false;
+                    }
+                    SharedPrefManager.getInstance(this).logout();
+                    startActivity(new Intent(this, LoginActivity.class));
                     finish();
-                    SharedPrefManager.getInstance(getApplicationContext()).logout();
                     break;
                 default:
                     break;
@@ -113,27 +129,45 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             return true;
         });
 
-        user = SharedPrefManager.getInstance(this).getUser();
+        user = SharedPrefManager.getInstance(HomeActivity.this).getUser();
         headView = navigationView.getHeaderView(0);
         ((TextView) headView.findViewById(R.id.displayUsernmae)).setText(user.getUsername());
         ((TextView) headView.findViewById(R.id.displayEmail)).setText(user.getEmail());
 
-        mainArrayList = new ArrayList<>();
-        mainArrayList.add(new Product("1", "Shoe 1", "Running Shoe", "", 2000000L, "New", "Nike", "1000", "Red", 100L, "This is a good shoe"));
-        mainArrayList.add(new Product("1", "Shoe 1", "Running Shoe", "", 2000000L, "New", "Nike", "1000", "Red", 100L, "This is a good shoe"));
-        mainArrayList.add(new Product("1", "Shoe 1", "Running Shoe", "", 2000000L, "New", "Nike", "1000", "Red", 100L, "This is a good shoe"));
 
-        itemPicker = findViewById(R.id.item_picker);
-        itemPicker.setOrientation(DSVOrientation.HORIZONTAL);
-        scrollAdapter = new ScrollAdapter(mainArrayList, this);
-        itemPicker.setAdapter(scrollAdapter);
-        itemPicker.setItemTransitionTimeMillis(200);
-        itemPicker.setItemTransformer(new ScaleTransformer.Builder()
-                .setMaxScale(1.05f)
-                .setMinScale(0.8f)
-                .setPivotX(Pivot.X.CENTER)
-                .build());
-
+        topAppBar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.call:
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:0123456789"));
+                    startActivity(callIntent);
+                    return true;
+                case R.id.msg:
+                    Intent smsIntent = new Intent(Intent.ACTION_SENDTO);
+                    smsIntent.setData(Uri.parse("smsto:0123456789"));
+                    smsIntent.putExtra("sms_body", "Hello There");
+                    startActivity(smsIntent);
+                    return true;
+                case R.id.map:
+                    String getMap = String.format(Locale.ENGLISH, "geo:%f,%f", -7.4007514414175715, 110.68323302612266);
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getMap));
+                    startActivity(mapIntent);
+                    return true;
+                case R.id.upd:
+                    Intent updIntent = new Intent(HomeActivity.this, UpdateUserActivity.class);
+                    startActivity(updIntent);
+                    return true;
+                case R.id.logout:
+                    if (!isLogout(this, user.getLoginOption())) {
+                        return false;
+                    }
+                    SharedPrefManager.getInstance(this).logout();
+                    startActivity(new Intent(this, LoginActivity.class));
+                    finish();
+                    return true;
+            }
+            return false;
+        });
 
         recyclerView = findViewById(R.id.itemRV);
         productArrayList = SharedPrefManager.getInstance(this).loadProductList();
@@ -180,9 +214,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             anim.start();
 
         });
-
+        showTopList();
 
         toCart.setOnClickListener(view -> startActivity(new Intent(HomeActivity.this, KeranjangActivity.class)));
+    }
+
+    private void showTopList() {
+        mainArrayList = new ArrayList<>();
+        mainArrayList.add(productArrayList.get(0));
+        mainArrayList.add(productArrayList.get(2));
+        mainArrayList.add(productArrayList.get(4));
+
+        itemPicker = findViewById(R.id.item_picker);
+        itemPicker.setOrientation(DSVOrientation.HORIZONTAL);
+        scrollAdapter = new ScrollAdapter(mainArrayList, this);
+        itemPicker.setAdapter(scrollAdapter);
+        itemPicker.setItemTransitionTimeMillis(200);
+        itemPicker.setItemTransformer(new ScaleTransformer.Builder()
+                .setMaxScale(1.05f)
+                .setMinScale(0.8f)
+                .setPivotX(Pivot.X.CENTER)
+                .build());
     }
 
     private void loadProduct(ArrayList<Product> newProduct) {
@@ -195,26 +247,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         recyclerView.setAdapter(adapter);
     }
 
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // Handle navigation view item clicks here.
-        switch (item.getItemId()) {
-            case R.id.cart:
-                startActivity(new Intent(HomeActivity.this, KeranjangActivity.class));
-                break;
-            case R.id.logout:
-                finish();
-                SharedPrefManager.getInstance(getApplicationContext()).logout();
-                break;
-            default:
-                break;
-        }
-        //close navigation drawer
-        drawerLayout.close();
-        return true;
-    }
-
     @Override
     public void receivePosition(int listPosition, int menu, Intent intent, Product product) {
         this.listPosition = listPosition;
@@ -222,12 +254,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         if (menu == 1) {
             activityResultLauncher.launch(intent);
-        }
-        else if (menu == 2) {
+        } else if (menu == 2) {
             intent.putExtra("chosenProduct", product);
             activityResultLauncher.launch(intent);
-        }
-        else if (menu == 3) {
+        } else if (menu == 3) {
             deleteProduct();
             readProduct();
         }
@@ -284,7 +314,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 Log.d("JsonArray", products.toString());
 
-                Type type = new TypeToken<List<Product>>() {}.getType();
+                Type type = new TypeToken<List<Product>>() {
+                }.getType();
                 List<Product> productList = new Gson().fromJson(products.toString(), type);
                 SharedPrefManager.getInstance(getBaseContext()).saveProductList(new ArrayList<>(productList));
                 loadProduct(new ArrayList<>(productList));
@@ -297,7 +328,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         setTextColor(getResources().getColor(R.color.whiteAccent)).show();
             }
         });
-
-
     }
+
+    private boolean isLogout(Context context, String option) {
+        switch (option) {
+            case "MySQL":
+                logout = true;
+                break;
+            case "Google":
+                gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+                gsc = GoogleSignIn.getClient(context, gso);
+                gsc.signOut().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) logout = true;
+                });
+                logout = true;
+                break;
+            case "Facebook":
+                LoginManager.getInstance().logOut();
+                logout = true;
+                break;
+        }
+        return logout;
+    }
+
 }

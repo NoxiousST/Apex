@@ -1,12 +1,13 @@
 package com.test.apex;
 
-import com.google.firebase.database.Exclude;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Cart extends ArrayList<Cart> {
+public class Cart implements Parcelable {
     private String productId;
     private long productQuantity;
 
@@ -23,11 +24,44 @@ public class Cart extends ArrayList<Cart> {
         this.productQuantity = productQuantity;
     }
 
-    @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", productId);
         result.put("quantity", productQuantity);
         return result;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.productId);
+        dest.writeLong(this.productQuantity);
+    }
+
+    public void readFromParcel(Parcel source) {
+        this.productId = source.readString();
+        this.productQuantity = source.readLong();
+    }
+
+    protected Cart(Parcel in) {
+        this.productId = in.readString();
+        this.productQuantity = in.readLong();
+    }
+
+    public static final Parcelable.Creator<Cart> CREATOR = new Parcelable.Creator<Cart>() {
+        @Override
+        public Cart createFromParcel(Parcel source) {
+            return new Cart(source);
+        }
+
+        @Override
+        public Cart[] newArray(int size) {
+            return new Cart[size];
+        }
+    };
 }

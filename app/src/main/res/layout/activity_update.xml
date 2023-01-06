@@ -1,0 +1,302 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="?attr/materialCardViewElevatedStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/upd1"
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginVertical="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="18dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/user1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="Update Username"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/updUser"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:hint="Username"
+                        app:boxCornerRadiusBottomEnd="50dp"
+                        app:boxCornerRadiusBottomStart="50dp"
+                        app:boxCornerRadiusTopEnd="50dp"
+                        app:boxCornerRadiusTopStart="50dp"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        app:boxStrokeColor="@drawable/line_selector"
+                        app:startIconDrawable="@drawable/person_outline"
+                        app:startIconTint="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/updUserText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#F5F5F5" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                        android:id="@+id/updBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center"
+                        android:padding="0dp"
+                        android:text="Update Username"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/colorPrimary" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/upd2"
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginVertical="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="18dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/pass1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:gravity="center_vertical"
+                        android:text="Reset Password"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/hide1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/updCurPass"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginVertical="@dimen/activity_vertical_margin"
+                        android:hint="Current Password"
+                        app:boxStrokeColor="@drawable/line_selector"
+                        app:startIconDrawable="@drawable/lock_closed_outline"
+                        app:startIconTint="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/updCurPassText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#F5F5F5"
+                            android:inputType="textPassword"
+                            app:boxBackgroundColor="#F5F5F5" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="@dimen/activity_vertical_margin"
+                        app:dividerInsetEnd="16dp"
+                        app:dividerInsetStart="16dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/updNewPass1"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:boxBackgroundColor="@color/white"
+                        android:hint="New Password"
+                        app:startIconDrawable="@drawable/lock_closed_outline"
+                        app:startIconTint="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/updNewPassText1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/updNewPass2"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginVertical="@dimen/activity_vertical_margin"
+                        android:hint="Confirm New Password"
+                        app:boxStrokeColor="@drawable/line_selector"
+                        app:startIconDrawable="@drawable/lock_closed_outline"
+                        app:startIconTint="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/updNewPassText2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#F5F5F5"
+                            android:inputType="textPassword"
+                            app:boxBackgroundColor="#F5F5F5" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                        android:id="@+id/rstBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center"
+                        android:padding="0dp"
+                        android:text="Reset Password"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        app:backgroundTint="@color/colorPrimary" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/dlt"
+            style="?attr/materialCardViewElevatedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginVertical="16dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="18dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="Delete Account"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/dltPass"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="16dp"
+                        android:hint="Confirm Password"
+                        app:boxStrokeColor="@drawable/line_selector"
+                        app:startIconDrawable="@drawable/lock_closed_outline"
+                        app:startIconTint="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/dltPassText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#F5F5F5"
+                            app:boxBackgroundColor="#F5F5F5" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                        android:id="@+id/dltBtn"
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center"
+                        android:padding="0dp"
+                        android:text="Delete Account"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textStyle="bold"
+                        app:backgroundTint="@android:color/holo_red_dark" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

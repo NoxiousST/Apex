@@ -7,7 +7,7 @@
     android:background="@color/darkBackground"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".accounts.MainActivity">
+    tools:context=".MainActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -24,7 +24,7 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:src="@drawable/logoapex"
-            android:tint="@color/whiteAccent"/>
+            app:tint="@color/whiteAccent"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="match_parent"

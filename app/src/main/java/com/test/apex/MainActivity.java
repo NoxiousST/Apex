@@ -1,4 +1,4 @@
-package com.test.apex.accounts;
+package com.test.apex;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,18 +9,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.test.apex.ui.Products.Product;
-import com.test.apex.R;
 import com.test.apex.network.ServerAPI;
-import com.test.apex.SharedPrefManager;
-import com.test.apex.StatusBar;
-import com.test.apex.VolleyOnEventListener;
-import com.test.apex.VolleyServerRequest;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -28,6 +30,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
+
+    ObjectMapper mapper = new ObjectMapper();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             Intent login = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(login);
             finish();
-        },3000);
+        }, 3000);
     }
 
     private void readProduct() {
@@ -54,17 +58,19 @@ public class MainActivity extends AppCompatActivity {
 
         new VolleyServerRequest(getApplicationContext(), ServerAPI.URL_READ_PRODUCT, newProduct, bitmap, new VolleyOnEventListener() {
             @Override
-            public void onSuccess(String res ) {
+            public void onSuccess(String res) {
                 Log.d("VolleyReq", "onSuccess: " + res);
 
-                JsonObject responseResult = new Gson().fromJson(res, JsonObject.class);
-                JsonArray products = responseResult.get("products").getAsJsonArray();
+                try {
+                    JsonNode node = mapper.readTree(res);
+                    JsonNode products = node.get("products");
 
-                Log.d("JsonArray", products.toString());
-
-                Type type = new TypeToken<List<Product>>() {}.getType();
-                List<Product> productList = new Gson().fromJson(products.toString(), type);
-                SharedPrefManager.getInstance(getBaseContext()).saveProductList(new ArrayList<>(productList));
+                    Type type = new TypeToken<List<Product>>() {}.getType();
+                    List<Product> productList = new Gson().fromJson(products.toString(), type);
+                    SharedPrefManager.getInstance(getBaseContext()).saveProductList(new ArrayList<>(productList));
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

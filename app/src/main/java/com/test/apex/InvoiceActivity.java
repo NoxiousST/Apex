@@ -14,10 +14,14 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,7 +84,7 @@ public class InvoiceActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         Bundle extras = getIntent().getExtras();
-        transaction = new Gson().fromJson(extras.getString("transactionInvoice"), Transaction.class);
+        transaction = extras.getParcelable("transactionInvoice");
 
         if (transaction.getTransactionStatus().equals("Success")) {
             ifSuccess();
@@ -112,9 +116,22 @@ public class InvoiceActivity extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 200);
+
+        binding.downloadInvoice.setOnClickListener(view -> {
+            bitmap = getBitmapFromView(binding.scroll, binding.scroll.getChildAt(0).getHeight(), binding.scroll.getChildAt(0).getWidth());
+
+            ContentResolver cr = getContentResolver();
+            //Save with user editable title
+            String title = transaction.getInvoiceNumber().replaceAll("[^\\dA-Za-z ]", "_").toLowerCase() + ".jpg";
+            String description = "Apex Invoice";
+            String savedURL = MediaStore.Images.Media.insertImage(cr, bitmap, title, description);
+
+            Toast.makeText(this, "Saved to gallery " + savedURL, Toast.LENGTH_LONG).show();
+        });
     }
 
     private void ifSuccess() {
+        binding.isSuccess.setText(transaction.getTransactionStatus());
         Glide.with(this).load(R.drawable.logo_success).into(binding.isLogoSuccess);
         String payDate = transaction.getpaymentDate();
         binding.isDescSuccess.setText("Pembayaran telah berhasil dilakukan");
@@ -140,19 +157,6 @@ public class InvoiceActivity extends AppCompatActivity {
             }
         });
 
-
-        binding.downloadInvoice.setOnClickListener(view -> {
-            binding.scroll.setDrawingCacheEnabled(true);
-            bitmap = Bitmap.createBitmap(binding.scroll.getDrawingCache());
-
-            ContentResolver cr = getContentResolver();
-            //Save with user editable title
-            String title = transaction.getInvoiceNumber().replaceAll("[^\\dA-Za-z ]", "_").toLowerCase() + ".jpg";
-            String description = "Apex Invoice";
-            String savedURL = MediaStore.Images.Media.insertImage(cr, bitmap, title, description);
-
-            Toast.makeText(this, "Saved to gallery " + savedURL, Toast.LENGTH_LONG).show();
-        });
     }
 
     @Override
@@ -176,6 +180,18 @@ public class InvoiceActivity extends AppCompatActivity {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             ifSuccess();
         }
+    }
+
+    private Bitmap getBitmapFromView(View view, int height, int width) {
+        Bitmap bitmapScroll = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmapScroll);
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable != null)
+            bgDrawable.draw(canvas);
+        else
+            canvas.drawColor(Color.WHITE);
+        view.draw(canvas);
+        return bitmapScroll;
     }
 
     private void createTransaction() {

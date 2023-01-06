@@ -2,30 +2,63 @@ package com.test.apex;
 
 public class User {
 
-    private int id;
-    private String username, email, password;
+    private String id;
+    private String username;
+    private String email;
+    private String password;
+    private String loginOption;
 
-    public User(int id, String username, String email, String password) {
+    public User() {
+
+    }
+
+    public User(String id, String username, String email, String password, String loginOption) {
         this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.loginOption = loginOption;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
+    }
+
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getLoginOption() {
+        return loginOption;
+    }
+
+    public void setLoginOption(String loginOption) {
+        this.loginOption = loginOption;
     }
 
 }

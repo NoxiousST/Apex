@@ -1,4 +1,4 @@
-package com.test.apex.accounts;
+package com.test.apex;
 
 import androidx.appcompat.app.AppCompatActivity;
 

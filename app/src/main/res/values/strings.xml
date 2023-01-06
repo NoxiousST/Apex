@@ -63,4 +63,8 @@
 
     <string name="google_maps_key">AIzaSyBZfs7zuN2I-7bNoOAIbG4goQtqlHo3YF8</string>
     <string name="map_id">802a12ebdd403a82</string>
+
+    <string name="facebook_app_id">888133115947132</string>
+    <string name="fb_login_protocol_scheme">fb1569087806849932</string>
+    <string name="facebook_client_token">e973103f957a47b5463395172e16f032</string>
 </resources>

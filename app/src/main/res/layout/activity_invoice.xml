@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue"
     tools:context=".InvoiceActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -12,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@android:color/transparent"
+        android:backgroundTint="@color/blue"
         app:liftOnScroll="true">
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -23,332 +22,339 @@
             app:navigationIcon="@drawable/menu"
             app:navigationIconTint="@color/white"
             app:popupTheme="@color/accentBackground"
-            app:title="Edit Product"
+            app:title="Invoice"
             app:titleCentered="true"
             app:titleTextColor="@color/white" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.core.widget.NestedScrollView
+    <ScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/actionBar"
         tools:context=".InvoiceActivity">
 
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
+            android:id="@+id/screen"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="@dimen/m36"
-            android:layout_marginVertical="@dimen/m24"
-            app:cardCornerRadius="@dimen/m24">
+            android:background="@color/blue"
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/m24"
-                android:paddingVertical="@dimen/m36">
-
-                <ImageView
-                    android:id="@+id/isLogoSuccess"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginHorizontal="92dp"
-                    android:adjustViewBounds="true"
-                    android:src="@drawable/logo_success" />
-
-                <TextView
-                    android:id="@+id/isSuccess"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m16"
-                    android:fontFamily="@font/nexabold"
-                    android:text="Success"
-                    android:textAlignment="center"
-                    android:textColor="@color/textDark"
-                    android:textFontWeight="900"
-                    android:textSize="30sp" />
-
-                <TextView
-                    android:id="@+id/isDescSuccess"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/louis_george_cafe_bold"
-                    android:text="You've succesfully transfered money"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/price"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m24"
-                    android:fontFamily="@font/nexabold"
-                    android:text="Rp. 20.000.000"
-                    android:textAlignment="center"
-                    android:textColor="@color/textDark"
-                    android:textFontWeight="900"
-                    android:textSize="32sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/louis_george_cafe_bold"
-                    android:text="Total Pembayaran"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/darker_gray"
-                    android:textSize="14sp" />
-
-
-                <TextView
-                    android:id="@+id/invoiceNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m16"
-                    android:fontFamily="@font/louis_george_cafe_bold"
-                    android:text="INV/2022/01234-ABCD"
-                    android:textAlignment="center"
-                    android:textColor="@color/textDark"
-                    android:textFontWeight="900"
-                    android:textSize="18sp" />
-
+                android:layout_marginHorizontal="@dimen/m36"
+                android:layout_marginVertical="@dimen/m24"
+                app:cardCornerRadius="@dimen/m24">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m16"
-                    android:orientation="vertical">
+                    android:layout_height="match_parent"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/m24"
+                    android:paddingVertical="@dimen/m36">
+
+                    <ImageView
+                        android:id="@+id/isLogoSuccess"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="92dp"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/logo_success" />
+
+                    <TextView
+                        android:id="@+id/isSuccess"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/m16"
+                        android:fontFamily="@font/nexabold"
+                        android:text="Success"
+                        android:textAlignment="center"
+                        android:textColor="@color/textDark"
+                        android:textFontWeight="900"
+                        android:textSize="30sp" />
+
+                    <TextView
+                        android:id="@+id/isDescSuccess"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/louis_george_cafe_bold"
+                        android:text="You've succesfully transfered money"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/m24"
+                        android:fontFamily="@font/nexabold"
+                        android:text="Rp. 20.000.000"
+                        android:textAlignment="center"
+                        android:textColor="@color/textDark"
+                        android:textFontWeight="900"
+                        android:textSize="32sp" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/musticaprosemibold"
-                        android:paddingHorizontal="@dimen/m4"
-                        android:text="Pembeli"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/textDark"
-                        android:textFontWeight="900"
+                        android:fontFamily="@font/louis_george_cafe_bold"
+                        android:text="Total Pembayaran"
+                        android:textAlignment="center"
+                        android:textColor="@android:color/darker_gray"
                         android:textSize="14sp" />
 
-                    <com.google.android.material.card.MaterialCardView
+
+                    <TextView
+                        android:id="@+id/invoiceNumber"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:cardCornerRadius="@dimen/m12"
-                        app:cardElevation="0dp">
+                        android:layout_marginTop="@dimen/m16"
+                        android:fontFamily="@font/louis_george_cafe_bold"
+                        android:text="INV/2022/01234-ABCD"
+                        android:textAlignment="center"
+                        android:textColor="@color/textDark"
+                        android:textFontWeight="900"
+                        android:textSize="18sp" />
 
-                        <LinearLayout
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/m16"
+                        android:orientation="vertical">
+
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/whiterAccent"
-                            android:orientation="vertical"
-                            android:padding="@dimen/m12">
+                            android:fontFamily="@font/musticaprosemibold"
+                            android:paddingHorizontal="@dimen/m4"
+                            android:text="Pembeli"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/textDark"
+                            android:textFontWeight="900"
+                            android:textSize="14sp" />
 
-                            <TextView
-                                android:id="@+id/username"
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="@dimen/m12"
+                            app:cardElevation="0dp">
+
+                            <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/louis_george_cafe_bold"
-                                android:text="Daniel Kristian"
+                                android:background="@color/whiterAccent"
+                                android:orientation="vertical"
+                                android:padding="@dimen/m12">
+
+                                <TextView
+                                    android:id="@+id/username"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/louis_george_cafe_bold"
+                                    android:text="Daniel Kristian"
+                                    android:textAlignment="textStart"
+                                    android:textColor="@color/textDark"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/email"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/louis_george_cafe_bold"
+                                    android:text="user@gmail.com"
+                                    android:textAlignment="textStart"
+                                    android:textColor="@android:color/darker_gray"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/m8"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/musticaprosemibold"
+                            android:paddingHorizontal="@dimen/m4"
+                            android:text="Alamat"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/textDark"
+                            android:textFontWeight="900"
+                            android:textSize="14sp" />
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="@dimen/m12"
+                            app:cardElevation="0dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/whiterAccent"
+                                android:orientation="vertical"
+                                android:padding="@dimen/m12">
+
+                                <TextView
+                                    android:id="@+id/address"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/louis_george_cafe_bold"
+                                    android:text="Jl.Kenari 1 No.31, Blora, Kabupaten Blora, Jawa Tengah, 58219"
+                                    android:textAlignment="textStart"
+                                    android:textColor="@color/textDark"
+                                    android:textSize="14sp" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/m12"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/m8"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/musticaprosemibold"
+                                android:paddingHorizontal="@dimen/m4"
+                                android:text="Tanggal Faktur"
                                 android:textAlignment="textStart"
                                 android:textColor="@color/textDark"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/email"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/louis_george_cafe_bold"
-                                android:text="danielkristian268@gmail.com"
-                                android:textAlignment="textStart"
-                                android:textColor="@android:color/darker_gray"
+                                android:textFontWeight="900"
                                 android:textSize="12sp" />
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardCornerRadius="@dimen/m12"
+                                app:cardElevation="0dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/whiterAccent"
+                                    android:orientation="vertical"
+                                    android:padding="@dimen/m8">
+
+                                    <TextView
+                                        android:id="@+id/factureDate"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/louis_george_cafe_bold"
+                                        android:text="18 Januari 2022"
+                                        android:textAlignment="textStart"
+                                        android:textColor="@color/textDark"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
 
-                </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m8"
-                    android:orientation="vertical">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/musticaprosemibold"
+                                android:paddingHorizontal="@dimen/m4"
+                                android:text="Tanggal Pembayaran"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/textDark"
+                                android:textFontWeight="900"
+                                android:textSize="12sp" />
 
-                    <TextView
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardCornerRadius="@dimen/m12"
+                                app:cardElevation="0dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@color/whiterAccent"
+                                    android:orientation="vertical"
+                                    android:padding="@dimen/m8">
+
+                                    <TextView
+                                        android:id="@+id/payDate"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/louis_george_cafe_bold"
+                                        android:text="22 Januari 2022"
+                                        android:textAlignment="textStart"
+                                        android:textColor="@color/textDark"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/downloadInvoice"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginVertical="@dimen/m8"
+                        android:fontFamily="@font/musticaprosemibold"
+                        android:letterSpacing="0.05"
+                        android:padding="0dp"
+                        android:text="Download Invoice"
+                        android:textAllCaps="false"
+                        android:textColor="@android:color/darker_gray"
+                        android:textFontWeight="900"
+                        android:textSize="10sp"
+                        app:icon="@drawable/receipt"
+                        app:iconSize="@dimen/m16"
+                        app:iconTint="@android:color/darker_gray" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/done"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/musticaprosemibold"
-                        android:paddingHorizontal="@dimen/m4"
-                        android:text="Alamat"
-                        android:textAlignment="textStart"
-                        android:textColor="@color/textDark"
+                        android:paddingVertical="@dimen/m8"
+                        android:text="Selesai"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
                         android:textFontWeight="900"
-                        android:textSize="14sp" />
-
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:cardCornerRadius="@dimen/m12"
-                        app:cardElevation="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@color/whiterAccent"
-                            android:orientation="vertical"
-                            android:padding="@dimen/m12">
-
-                            <TextView
-                                android:id="@+id/address"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="@font/louis_george_cafe_bold"
-                                android:text="Jl.Kenari 1 No.31, Blora, Kabupaten Blora, Jawa Tengah, 58219"
-                                android:textAlignment="textStart"
-                                android:textColor="@color/textDark"
-                                android:textSize="14sp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
+                        android:textSize="16sp"
+                        app:backgroundTint="@color/blue"
+                        app:cornerRadius="@dimen/m8" />
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/m12"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/m8"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/musticaprosemibold"
-                            android:paddingHorizontal="@dimen/m4"
-                            android:text="Tanggal Faktur"
-                            android:textAlignment="textStart"
-                            android:textColor="@color/textDark"
-                            android:textFontWeight="900"
-                            android:textSize="12sp" />
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="@dimen/m12"
-                            app:cardElevation="0dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@color/whiterAccent"
-                                android:orientation="vertical"
-                                android:padding="@dimen/m8">
-
-                                <TextView
-                                    android:id="@+id/factureDate"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/louis_george_cafe_bold"
-                                    android:text="18 Januari 2022"
-                                    android:textAlignment="textStart"
-                                    android:textColor="@color/textDark"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/musticaprosemibold"
-                            android:paddingHorizontal="@dimen/m4"
-                            android:text="Tanggal Pembayaran"
-                            android:textAlignment="textStart"
-                            android:textColor="@color/textDark"
-                            android:textFontWeight="900"
-                            android:textSize="12sp" />
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:cardCornerRadius="@dimen/m12"
-                            app:cardElevation="0dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:background="@color/whiterAccent"
-                                android:orientation="vertical"
-                                android:padding="@dimen/m8">
-
-                                <TextView
-                                    android:id="@+id/payDate"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/louis_george_cafe_bold"
-                                    android:text="22 Januari 2022"
-                                    android:textAlignment="textStart"
-                                    android:textColor="@color/textDark"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/downloadInvoice"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginVertical="@dimen/m8"
-                    android:fontFamily="@font/musticaprosemibold"
-                    android:letterSpacing="0.05"
-                    android:padding="0dp"
-                    android:text="Download Invoice"
-                    android:textAllCaps="false"
-                    android:textColor="@android:color/darker_gray"
-                    android:textFontWeight="900"
-                    android:textSize="10sp"
-                    app:icon="@drawable/receipt"
-                    app:iconSize="@dimen/m16"
-                    app:iconTint="@android:color/darker_gray" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/done"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/musticaprosemibold"
-                    android:paddingVertical="@dimen/m8"
-                    android:text="Selesai"
-                    app:backgroundTint="@color/blue"
-                    android:textAllCaps="false"
-                    android:textFontWeight="900"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    app:cornerRadius="@dimen/m8" />
-
-            </LinearLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-    </androidx.core.widget.NestedScrollView>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

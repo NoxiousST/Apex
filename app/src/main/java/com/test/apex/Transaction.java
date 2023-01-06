@@ -1,11 +1,15 @@
 package com.test.apex;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.Exclude;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Transaction {
+public class Transaction implements Parcelable {
 
     private String transactionId, invoiceNumber, transactionStatus, transactionAddress, invoiceDate, paymentDate, userId, products;
     private Long transactionAmount;
@@ -67,4 +71,45 @@ public class Transaction {
         result.put("products", products);
         return result;
     }
+
+    protected Transaction(Parcel in){
+        transactionId = in.readString();
+        invoiceNumber = in.readString();
+        transactionStatus = in.readString();
+        transactionAmount = in.readLong();
+        transactionAddress = in.readString();
+        invoiceDate = in.readString();
+        paymentDate = in.readString();
+        userId = in.readString();
+        products = in.readString();
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(transactionId);
+        parcel.writeString(invoiceNumber);
+        parcel.writeString(transactionStatus);
+        parcel.writeLong(transactionAmount);
+        parcel.writeString(transactionAddress);
+        parcel.writeString(invoiceDate);
+        parcel.writeString(paymentDate);
+        parcel.writeString(userId);
+        parcel.writeString(products);
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public Transaction createFromParcel(Parcel in) {
+            return new Transaction(in);
+        }
+
+        public Transaction[] newArray(int size) {
+            return new Transaction[size];
+        }
+    };
 }

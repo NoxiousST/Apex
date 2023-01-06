@@ -1,5 +1,7 @@
 package com.test.apex.ui.Products;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +27,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -44,6 +49,7 @@ import com.test.apex.R;
 import com.test.apex.ReceivePosition;
 import com.test.apex.SharedPrefManager;
 import com.test.apex.User;
+import com.test.apex.VolleySingleton;
 import com.test.apex.database.CartFirebase;
 
 import java.text.NumberFormat;
@@ -70,6 +76,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     CartFirebase cartFirebase = new CartFirebase();
     long subTotal = 0;
     long valueQuantity = 0;
+
+    private ImageLoader mImageLoader;
 
     public RecyclerViewAdapter(ArrayList<Product> recyclerDataArrayList, Context mcontext, ReceivePosition listener) {
         this.productArrayList = recyclerDataArrayList;
@@ -110,14 +118,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         }).into(holder.itemImage);
 
+        String url = productArrayList.get(position).getproductImage();
+        mImageLoader = VolleySingleton.getInstance(mcontext).getImageLoader();
+        holder.itemImage.setImageUrl(url, mImageLoader);
+
 
         holder.itemName.setText(recyclerData.getProductName());
         holder.itemDesc.setText(String.valueOf(recyclerData.getproductType()));
         holder.itemPrice.setText(format.format(recyclerData.getproductPrice()));
-        if (recyclerData.getproductManufacter().equals("Nike"))
-            holder.itemManufacter.setImageDrawable(mcontext.getResources().getDrawable(R.drawable.nike_logo));
+        if (recyclerData.getproductManufacter().equals("SteelSeries"))
+            holder.itemManufacter.setImageDrawable(mcontext.getResources().getDrawable(R.drawable.steelseries_logo));
         else
-            holder.itemManufacter.setImageDrawable(mcontext.getResources().getDrawable(R.drawable.adidas));
+            holder.itemManufacter.setImageDrawable(mcontext.getResources().getDrawable(R.drawable.steelseries_logo));
 
         holder.cardCV.setOnClickListener(view -> {
             recyclerData = productArrayList.get(position);
@@ -210,7 +222,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public static class RecyclerViewHolder extends RecyclerView.ViewHolder {
         private final TextView itemName, itemPrice, itemDesc;
-        private final ImageView itemImage, itemManufacter;
+        private final ImageView itemManufacter;
+        private final NetworkImageView itemImage;
         private final CircularProgressIndicator progressIndicator;
         private final MaterialCardView cardCV;
 

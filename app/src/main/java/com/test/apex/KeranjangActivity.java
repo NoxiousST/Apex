@@ -1,6 +1,7 @@
 package com.test.apex;
 
 import static android.content.ContentValues.TAG;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -13,11 +14,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
@@ -29,19 +36,33 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.reflect.TypeToken;
+import com.google.zxing.common.StringUtils;
 import com.test.apex.ui.Products.CartRecyclerAdapter;
 import com.test.apex.database.TransactionDatabase;
 import com.test.apex.databinding.ActivityKeranjangBinding;
 import com.test.apex.network.ServerAPI;
 import com.test.apex.ui.home.MapActivity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class KeranjangActivity extends AppCompatActivity implements ReceiveCartPosition {
 
@@ -66,6 +87,8 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
     String address;
     long subTotal = 0, deliveryAmount = 0, tax = 0, totalAmount = 0;
     ArrayList<ProductTransaction> productTransactionList = new ArrayList<>();
+    ObjectMapper mapper = new ObjectMapper();
+    String fuckList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +130,6 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
         });
 
 
-
         binding.toCheckout.setOnClickListener(view -> {
             if (deliveryAmount > 0)
                 createTransaction();
@@ -127,7 +149,7 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
                         Intent getResult = result.getData();
                         address = Objects.requireNonNull(getResult).getStringExtra("alamat");
                         deliveryAmount = getResult.getLongExtra("pengiriman", 0);
-                        tax = (subTotal + deliveryAmount) * 5/100;
+                        tax = (subTotal + deliveryAmount) * 5 / 100;
                         totalAmount = subTotal + deliveryAmount + tax;
 
                         binding.deliverAmount.setText(format.format(deliveryAmount));
@@ -158,13 +180,15 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d("DataSnapshot", ":" + dataSnapshot.getKey() + ", " + dataSnapshot.getValue());
                 cartArrayList.clear();
+                StringBuilder sb = new StringBuilder("");
+                ArrayNode arrayNode = mapper.createArrayNode();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     if (postSnapshot.child("productQuantity").exists()) {
-                        Log.d("PostSnapshot", ":" + postSnapshot.getKey() + ", " + postSnapshot.getValue());
-                        Log.d("PostSnapshot Child", ":" + postSnapshot.getKey() + ", " + postSnapshot.child("productQuantity").getValue());
                         String id = (String) postSnapshot.child("productId").getValue();
                         long quantity = (long) postSnapshot.child("productQuantity").getValue();
                         cartArrayList.add(new Cart(id, quantity));
+
+
                     }
                 }
                 myAdapter(cartArrayList);
@@ -188,7 +212,7 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
     @Override
     public void receiveSubTotal(long subTotal) {
         this.subTotal = subTotal;
-        tax = (subTotal + deliveryAmount) * 5/100;
+        tax = (subTotal + deliveryAmount) * 5 / 100;
         totalAmount = subTotal + deliveryAmount + tax;
 
         viewSubTotal.setText(format.format(subTotal));
@@ -201,14 +225,18 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
         new TransactionDatabase(getApplicationContext(), new VolleyOnEventListener() {
             @Override
             public void onSuccess(String res) {
-                JsonObject responseResult = new Gson().fromJson(res, JsonObject.class);
-                JsonPrimitive message = responseResult.get("count").getAsJsonPrimitive();
-                transactionCounter = Integer.parseInt(message.toString()) + 1;
+
+                try {
+                    JsonNode actualObj = mapper.readTree(res);
+                    transactionCounter = actualObj.get("count").asInt() + 1;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", locale);
                 String date = simpleDateFormat.format(new Date());
-                String userid = String.format(Locale.getDefault(), "%03d", Integer.parseInt(userID));
+                String userid = String.format(Locale.getDefault(), "%04d", Long.parseLong(userID.substring(userID.length() - 4)));
                 String transactionNumber = String.format(Locale.getDefault(), "%03d", transactionCounter);
                 String invoiceNumber = "INV/" + date + "-" + userid + "-" + transactionNumber;
 
@@ -217,9 +245,15 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
 
                 GsonBuilder gsonBuilder = new GsonBuilder();
 
-                Gson gson = gsonBuilder.create();
-                String productList = gson.toJson(cartArrayList);
-                Log.d("VolleyReq", "cartArrayList: " + productList);
+
+                String productList = null;
+                try {
+                    productList = mapper.writeValueAsString(cartArrayList);
+                    Log.d("User", "List: " + productList);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+
 
                 transaction = new Transaction("id", invoiceNumber, "Pending", totalAmount, address, invoiceDate, "-", userID, productList);
                 new TransactionDatabase(getApplicationContext(), ServerAPI.URL_CREATE_TRANSACTION, transaction, new VolleyOnEventListener() {
@@ -231,7 +265,7 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
                         if (!responseResult.get("error").getAsBoolean()) {
                             Intent intent = new Intent(KeranjangActivity.this, InvoiceActivity.class);
                             Log.d(TAG, transaction.getInvoiceNumber());
-                            intent.putExtra("transactionInvoice", new Gson().toJson(transaction));
+                            intent.putExtra("transactionInvoice", transaction);
                             startActivity(intent);
                         }
 
@@ -244,7 +278,6 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
                                 setTextColor(getResources().getColor(R.color.whiteAccent)).show();
                     }
                 });
-
 
 
             }

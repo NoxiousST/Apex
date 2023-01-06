@@ -117,7 +117,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="12sp" />
 
-        <com.google.android.material.button.MaterialButton
+        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -125,11 +125,12 @@
             android:fontFamily="@font/nexabold"
             android:paddingVertical="@dimen/m8"
             android:text="Login"
+            app:spinning_bar_padding="@dimen/m8"
             android:textAllCaps="false"
+            app:spinning_bar_color="@color/white"
             android:textColor="@color/whiteAccent"
             android:textFontWeight="900"
-            android:textSize="22sp"
-            app:cornerRadius="@dimen/m24" />
+            android:textSize="22sp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -161,7 +162,8 @@
                 app:backgroundTint="@color/accentBackground"
                 app:cornerRadius="30dp"
                 app:icon="@drawable/facebook"
-                app:iconTint="@null" />
+                app:iconTint="@null"
+                tools:ignore="SpeakableTextPresentCheck" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGoogle"
@@ -176,7 +178,8 @@
                 app:backgroundTint="@color/accentBackground"
                 app:cornerRadius="30dp"
                 app:icon="@drawable/icons8_google"
-                app:iconTint="@null" />
+                app:iconTint="@null"
+                tools:ignore="SpeakableTextPresentCheck" />
 
         </LinearLayout>
 
