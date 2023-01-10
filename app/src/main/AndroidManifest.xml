@@ -102,7 +102,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.Products.TambahBarang"
+            android:name=".TambahBarang"
             android:exported="false"
             android:windowSoftInputMode="adjustResize">
             <meta-data
@@ -110,7 +110,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.Products.UpdateBarang"
+            android:name=".UpdateBarang"
             android:exported="false"
             android:windowSoftInputMode="adjustResize">
             <meta-data
@@ -118,14 +118,14 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.Products.DetailActivity"
+            android:name=".DetailActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.Products.HomeActivity"
+            android:name=".HomeActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -167,7 +167,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".UpdateUserActivity"
+            android:name=".ProfileActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

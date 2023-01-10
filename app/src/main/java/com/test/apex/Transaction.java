@@ -30,20 +30,20 @@ public class Transaction implements Parcelable {
     public Long getTransactionAmount() {return transactionAmount;}
     public void setTransactionAmount(Long transactionAmount) {this.transactionAmount = transactionAmount;}
 
-    public String gettransactionAddress() {return transactionAddress;}
-    public void settransactionAddress(String transactionAddress) {this.transactionAddress = transactionAddress;}
+    public String getTransactionAddress() {return transactionAddress;}
+    public void setTransactionAddress(String transactionAddress) {this.transactionAddress = transactionAddress;}
 
-    public String getinvoiceDate() {return invoiceDate;}
-    public void setinvoiceDate(String invoiceDate) {this.invoiceDate = invoiceDate;}
+    public String getInvoiceDate() {return invoiceDate;}
+    public void setInvoiceDate(String invoiceDate) {this.invoiceDate = invoiceDate;}
 
-    public String getpaymentDate() {return paymentDate;}
-    public void setpaymentDate(String paymentDate) {this.paymentDate = paymentDate;}
+    public String getPaymentDate() {return paymentDate;}
+    public void setPaymentDate(String paymentDate) {this.paymentDate = paymentDate;}
 
-    public String getuserId() {return userId;}
-    public void setuserId(String userId) {this.userId = userId;}
+    public String getUserId() {return userId;}
+    public void setUserId(String userId) {this.userId = userId;}
 
-    public String getproducts() {return products;}
-    public void setproducts(String products) {this.products = products;}
+    public String getProducts() {return products;}
+    public void setProducts(String products) {this.products = products;}
 
     public Transaction(String transactionId, String invoiceNumber, String transactionStatus, Long transactionAmount, String transactionAddress, String invoiceDate, String paymentDate, String userId, String products) {
         this.transactionId = transactionId;

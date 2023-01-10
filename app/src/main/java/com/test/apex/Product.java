@@ -1,4 +1,4 @@
-package com.test.apex.ui.Products;
+package com.test.apex;
 
 import com.google.firebase.database.Exclude;
 

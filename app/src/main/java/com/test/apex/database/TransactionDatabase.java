@@ -7,7 +7,9 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
+import com.android.volley.RetryPolicy;
 import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
 import com.test.apex.SharedPrefManager;
 import com.test.apex.Transaction;
 import com.test.apex.VolleyMultipartRequest;
@@ -104,10 +106,23 @@ public class TransactionDatabase {
             }
 
         };
-        multipartRequest.setRetryPolicy(new DefaultRetryPolicy(
-                5600,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        multipartRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 5000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 2;
+            }
+
+            @Override
+            public void retry(VolleyError error) {
+
+            }
+        });
+
         VolleySingleton.getInstance(context).addToRequestQueue(multipartRequest);
     }
 }

@@ -1,7 +1,6 @@
 package com.test.apex;
 
 import static android.content.ContentValues.TAG;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -24,7 +22,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
@@ -32,37 +29,19 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.reflect.TypeToken;
-import com.google.zxing.common.StringUtils;
-import com.test.apex.ui.Products.CartRecyclerAdapter;
 import com.test.apex.database.TransactionDatabase;
 import com.test.apex.databinding.ActivityKeranjangBinding;
 import com.test.apex.network.ServerAPI;
 import com.test.apex.ui.home.MapActivity;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class KeranjangActivity extends AppCompatActivity implements ReceiveCartPosition {
 
@@ -88,7 +67,7 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
     long subTotal = 0, deliveryAmount = 0, tax = 0, totalAmount = 0;
     ArrayList<ProductTransaction> productTransactionList = new ArrayList<>();
     ObjectMapper mapper = new ObjectMapper();
-    String fuckList;
+    String userid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +157,7 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
         mDatabase.child(userID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                int totalItems = 0;
                 Log.d("DataSnapshot", ":" + dataSnapshot.getKey() + ", " + dataSnapshot.getValue());
                 cartArrayList.clear();
                 StringBuilder sb = new StringBuilder("");
@@ -187,11 +167,12 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
                         String id = (String) postSnapshot.child("productId").getValue();
                         long quantity = (long) postSnapshot.child("productQuantity").getValue();
                         cartArrayList.add(new Cart(id, quantity));
-
+                        totalItems += quantity;
 
                     }
                 }
                 myAdapter(cartArrayList);
+                binding.items.setText("Total " + totalItems + " items");
             }
 
             @Override
@@ -225,49 +206,59 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
         new TransactionDatabase(getApplicationContext(), new VolleyOnEventListener() {
             @Override
             public void onSuccess(String res) {
-
+                Log.d("RESPONSE", "res: " + res);
                 try {
+
                     JsonNode actualObj = mapper.readTree(res);
                     transactionCounter = actualObj.get("count").asInt() + 1;
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
+                Log.d("USER", "user: " + user.toMap());
 
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", locale);
                 String date = simpleDateFormat.format(new Date());
-                String userid = String.format(Locale.getDefault(), "%04d", Long.parseLong(userID.substring(userID.length() - 4)));
+                if (user.getLoginOption().equals("MySQL"))
+                    userid = String.format(Locale.getDefault(), "%04d", Long.parseLong(userID));
+                else
+                    userid = String.format(Locale.getDefault(), "%04d", Long.parseLong(userID.substring(userID.length() - 4)));
+
                 String transactionNumber = String.format(Locale.getDefault(), "%03d", transactionCounter);
                 String invoiceNumber = "INV/" + date + "-" + userid + "-" + transactionNumber;
 
-                SimpleDateFormat invDate = new SimpleDateFormat("dd MMMM yy", locale);
+                SimpleDateFormat invDate = new SimpleDateFormat("dd MMMM yyyy", locale);
                 String invoiceDate = invDate.format(new Date());
 
-                GsonBuilder gsonBuilder = new GsonBuilder();
 
 
                 String productList = null;
                 try {
                     productList = mapper.writeValueAsString(cartArrayList);
-                    Log.d("User", "List: " + productList);
+                    Log.d("List", "List: " + productList);
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 }
 
 
-                transaction = new Transaction("id", invoiceNumber, "Pending", totalAmount, address, invoiceDate, "-", userID, productList);
+                transaction = new Transaction("99", invoiceNumber, "Pending", totalAmount, address, invoiceDate, "-", userID, productList);
                 new TransactionDatabase(getApplicationContext(), ServerAPI.URL_CREATE_TRANSACTION, transaction, new VolleyOnEventListener() {
                     @Override
                     public void onSuccess(String res) {
                         Log.d("VolleyReq", "onSuccess: " + res);
-                        JsonObject responseResult = new Gson().fromJson(res, JsonObject.class);
-                        JsonPrimitive message = responseResult.get("message").getAsJsonPrimitive();
-                        if (!responseResult.get("error").getAsBoolean()) {
-                            Intent intent = new Intent(KeranjangActivity.this, InvoiceActivity.class);
-                            Log.d(TAG, transaction.getInvoiceNumber());
-                            intent.putExtra("transactionInvoice", transaction);
-                            startActivity(intent);
+
+                        try {
+                            JsonNode node = mapper.readTree(res);
+                            if (!node.get("error").asBoolean()) {
+                                Intent intent = new Intent(KeranjangActivity.this, InvoiceActivity.class);
+                                transaction.setTransactionId(node.get("lastId").asText());
+                                intent.putExtra("transactionInvoice", transaction);
+                                startActivity(intent);
+                            }
+                        } catch (JsonProcessingException e) {
+                            e.printStackTrace();
                         }
+
 
                     }
 
@@ -285,6 +276,9 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
             @Override
             public void onFailure(String error) {
                 Log.d(TAG, error);
+                Snackbar.make(binding.getRoot(), error, 6500)
+                        .setBackgroundTint(getResources().getColor(R.color.accentBackground)).
+                        setTextColor(getResources().getColor(R.color.whiteAccent)).show();
             }
         });
     }

@@ -41,6 +41,8 @@ android {
 dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.hbb20:ccp:2.6.1'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.14.1'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.14.1'

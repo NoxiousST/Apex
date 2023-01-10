@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 
 import com.google.gson.reflect.TypeToken;
 import com.test.apex.SharedPrefManager;
-import com.test.apex.ui.Products.Product;
+import com.test.apex.Product;
 import com.test.apex.network.ServerAPI;
 
 import java.lang.reflect.Type;

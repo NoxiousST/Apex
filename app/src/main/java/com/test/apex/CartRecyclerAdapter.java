@@ -1,4 +1,4 @@
-package com.test.apex.ui.Products;
+package com.test.apex;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -23,11 +23,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.test.apex.R;
-import com.test.apex.ReceiveCartPosition;
-import com.test.apex.SharedPrefManager;
-import com.test.apex.Cart;
-import com.test.apex.User;
 import com.test.apex.database.CartFirebase;
 
 import java.text.NumberFormat;

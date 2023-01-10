@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blue"
     tools:context=".InvoiceActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -37,21 +38,23 @@
         <LinearLayout
             android:id="@+id/screen"
             android:layout_width="match_parent"
-            android:background="@color/blue"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="@color/blue">
 
-            <com.google.android.material.card.MaterialCardView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginHorizontal="@dimen/m36"
+                android:layout_marginHorizontal="@dimen/m24"
                 android:layout_marginVertical="@dimen/m24"
                 app:cardCornerRadius="@dimen/m24">
 
-                <LinearLayout
+                <com.google.android.flexbox.FlexboxLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
                     android:orientation="vertical"
+                    app:flexDirection="column"
+                    app:alignItems="center"
                     android:paddingHorizontal="@dimen/m24"
                     android:paddingVertical="@dimen/m36">
 
@@ -216,9 +219,41 @@
                                     android:textSize="14sp" />
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
-
-
                     </LinearLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/m8"
+                        android:fontFamily="@font/musticaprosemibold"
+                        android:paddingHorizontal="@dimen/m4"
+                        android:text="Item"
+                        android:textAlignment="textStart"
+                        android:textColor="@color/textDark"
+                        android:textFontWeight="900"
+                        android:textSize="14sp" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:cardCornerRadius="@dimen/m12"
+                        app:cardElevation="0dp">
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/whiterAccent"
+                            android:orientation="vertical"
+                            android:padding="@dimen/m12">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/itemRV"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:listitem="@layout/invoice_item_list" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -307,7 +342,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:fontFamily="@font/louis_george_cafe_bold"
-                                        android:text="22 Januari 2022"
+                                        android:text="-"
                                         android:textAlignment="textStart"
                                         android:textColor="@color/textDark"
                                         android:textSize="12sp" />
@@ -337,6 +372,13 @@
                         app:iconSize="@dimen/m16"
                         app:iconTint="@android:color/darker_gray" />
 
+                    <ImageView
+                        android:visibility="gone"
+                        android:id="@+id/proofPayment"
+                        android:layout_marginBottom="@dimen/m8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="360dp"/>
+
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/done"
                         android:layout_width="match_parent"
@@ -351,9 +393,9 @@
                         app:backgroundTint="@color/blue"
                         app:cornerRadius="@dimen/m8" />
 
-                </LinearLayout>
+                </com.google.android.flexbox.FlexboxLayout>
 
-            </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

@@ -14,15 +14,18 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.test.apex.ui.Products.HomeActivity;
 import com.test.apex.network.ServerAPI;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -32,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
     TextInputEditText editTextUsername, editTextEmail, editTextPassword, editTextRePassword;
     TextInputLayout textLayoutUsername, textLayoutEmail, textLayoutPassword, textLayoutRePassword;
     JSONObject obj;
+    ObjectMapper mapper = new ObjectMapper();
     private LinearProgressIndicator progressBar;
     private String username, email, password, repassword;
     private boolean cancel = false;
@@ -126,15 +130,19 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
 
                         JSONObject userJson = obj.getJSONObject("user");
-                        User user = new User(
-                                userJson.getString("id"),
-                                userJson.getString("username"),
-                                userJson.getString("email"),
-                                userJson.getString("password"),
-                                "MySQL"
-                        );
-                        SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
+                        //User user = new User(
+                                //userJson.getString("id"),
+                                //userJson.getString("username"),
+                                //userJson.getString("email"),
+                                //userJson.getString("password"),
+                                //"MySQL"
+                        //);
+                        //SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
 
+                        JsonNode node = mapper.readTree(s);
+                        User user = mapper.treeToValue(node.get("user"), User.class);
+                        user.setLoginOption("MySQL");
+                        SharedPrefManager.getInstance(RegisterActivity.this).userLogin(user);
                         startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
                         finish();
 
@@ -153,6 +161,10 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 } catch (JSONException e) {
                     Log.d("WHATERR", e.getMessage());
+                    e.printStackTrace();
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
             }

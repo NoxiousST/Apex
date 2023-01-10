@@ -22,6 +22,7 @@
     <color name="leku_location_accept_button_bg">#1877F2</color>
 
     <color name="darkBackground">#161E29</color>
+    <color name="secondaryBackground">#1d2736</color>
     <color name="accentBackground">#243042</color>
     <color name="textDark">#161E29</color>
 
@@ -30,7 +31,6 @@
     <color name="brightAccent">#F5F5F5</color>
     <color name="whiteAccent">#DFE6F8</color>
     <color name="darkAccent">#183351</color>
-
 
     <color name="text_color">#1E4175</color>
     <color name="background_color">#ecf0f3</color>

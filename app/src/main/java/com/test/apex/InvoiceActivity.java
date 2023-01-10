@@ -1,5 +1,7 @@
 package com.test.apex;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -7,6 +9,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.Manifest;
 import android.app.Activity;
@@ -27,18 +30,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.test.apex.database.TransactionDatabase;
 import com.test.apex.databinding.ActivityInvoiceBinding;
 import com.test.apex.network.ServerAPI;
 
+import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -66,6 +74,9 @@ public class InvoiceActivity extends AppCompatActivity {
     String email;
     String address;
     String factureDate;
+    String payDate;
+    ObjectMapper mapper = new ObjectMapper();
+    private ArrayList<Cart> invItem;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -85,7 +96,7 @@ public class InvoiceActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         transaction = extras.getParcelable("transactionInvoice");
-
+        Log.d("Intent ID", "id transaction: " + transaction.getTransactionId());
         if (transaction.getTransactionStatus().equals("Success")) {
             ifSuccess();
         } else {
@@ -96,8 +107,10 @@ public class InvoiceActivity extends AppCompatActivity {
         invoice = transaction.getInvoiceNumber();
         username = user.getUsername();
         email = user.getEmail();
-        address = transaction.gettransactionAddress();
-        factureDate = transaction.getinvoiceDate();
+        address = transaction.getTransactionAddress();
+        factureDate = transaction.getInvoiceDate();
+        payDate = transaction.getPaymentDate();
+
 
         binding.isSuccess.setText(transaction.getTransactionStatus());
         binding.price.setText("Rp. " + format.format(priceAmount));
@@ -106,7 +119,28 @@ public class InvoiceActivity extends AppCompatActivity {
         binding.email.setText(email);
         binding.address.setText(address);
         binding.factureDate.setText(factureDate);
+        binding.payDate.setText(payDate);
 
+
+        try {
+            JsonNode node = mapper.readTree(transaction.getProducts());
+            ObjectReader reader = mapper.readerFor(new TypeReference<List<Cart>>() {});
+
+            invItem = reader.readValue(node);
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this) {
+                @Override
+                public boolean canScrollVertically() {
+                    return false;
+                }
+            };
+            binding.itemRV.setLayoutManager(linearLayoutManager);
+
+            InvoiceListAdapter adapter = new InvoiceListAdapter(invItem, this);
+            binding.itemRV.setAdapter(adapter);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         activityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -133,9 +167,7 @@ public class InvoiceActivity extends AppCompatActivity {
     private void ifSuccess() {
         binding.isSuccess.setText(transaction.getTransactionStatus());
         Glide.with(this).load(R.drawable.logo_success).into(binding.isLogoSuccess);
-        String payDate = transaction.getpaymentDate();
         binding.isDescSuccess.setText("Pembayaran telah berhasil dilakukan");
-        binding.payDate.setText(payDate);
         binding.done.setText("Selesai");
         binding.done.setOnClickListener(view -> {
             finish();
@@ -178,6 +210,10 @@ public class InvoiceActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
+            binding.proofPayment.setVisibility(View.VISIBLE);
+            Glide.with(this).load(photo).into(binding.proofPayment);
+            updateTransaction();
+            binding.isSuccess.setText("Success");
             ifSuccess();
         }
     }
@@ -194,19 +230,23 @@ public class InvoiceActivity extends AppCompatActivity {
         return bitmapScroll;
     }
 
-    private void createTransaction() {
-        SimpleDateFormat invDate = new SimpleDateFormat("dd MMMM yy", Locale.getDefault());
+    private void updateTransaction() {
+        transaction.setTransactionStatus("Success");
+        SimpleDateFormat invDate = new SimpleDateFormat("dd MMMM yyyy", Locale.getDefault());
         String paymentDate = invDate.format(new Date());
-        Transaction newTransaction;
-        newTransaction = new Transaction(transaction.getTransactionId(), invoice, "Success", priceAmount, address, invoice, paymentDate, String.valueOf(user.getId()), transaction.getproducts());
-        new TransactionDatabase(getApplicationContext(), ServerAPI.URL_UPDATE_TRANSACTION, newTransaction, new VolleyOnEventListener() {
+        transaction.setPaymentDate(paymentDate);
+        new TransactionDatabase(getApplicationContext(), ServerAPI.URL_UPDATE_NEW_TRANSACTION, transaction, new VolleyOnEventListener() {
             @Override
             public void onSuccess(String res) {
                 Log.d("VolleyReq", "onSuccess: " + res);
-                JsonObject responseResult = new Gson().fromJson(res, JsonObject.class);
-                JsonPrimitive message = responseResult.get("message").getAsJsonPrimitive();
-
-
+                try {
+                    JsonNode node = mapper.readTree(res);
+                        Snackbar.make(binding.getRoot(), node.get("message").asText(), 4800).
+                                setBackgroundTint(getResources().getColor(R.color.accentBackground)).
+                                setTextColor(getResources().getColor(R.color.whiteAccent)).show();
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -216,7 +256,5 @@ public class InvoiceActivity extends AppCompatActivity {
                         setTextColor(getResources().getColor(R.color.whiteAccent)).show();
             }
         });
-
-
     }
 }

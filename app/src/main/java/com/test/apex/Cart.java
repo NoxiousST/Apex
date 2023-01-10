@@ -3,7 +3,6 @@ package com.test.apex;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +25,8 @@ public class Cart implements Parcelable {
 
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
-        result.put("id", productId);
-        result.put("quantity", productQuantity);
+        result.put("productId", productId);
+        result.put("productQuantity", productQuantity);
         return result;
     }
 

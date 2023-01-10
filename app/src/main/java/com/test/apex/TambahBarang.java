@@ -1,6 +1,6 @@
-package com.test.apex.ui.Products;
+package com.test.apex;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -18,9 +18,8 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -41,10 +40,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -53,38 +48,37 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.test.apex.GetProductDetail;
-import com.test.apex.MoneyTextWatcher;
-import com.test.apex.R;
-import com.test.apex.RecyclerText;
-import com.test.apex.TextScrollAdapter;
-import com.test.apex.VolleyOnEventListener;
-import com.test.apex.VolleyServerRequest;
+import com.test.apex.database.ProductDatabase;
 import com.test.apex.network.ServerAPI;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Objects;
 
 import id.zelory.compressor.Compressor;
 
-
-public class UpdateBarang extends AppCompatActivity implements GetProductDetail {
-
-    private static final Locale locale = new Locale("id", "ID");
-    private static final NumberFormat format = NumberFormat.getCurrencyInstance(locale);
+public class TambahBarang extends AppCompatActivity implements GetProductDetail {
 
     private TextInputLayout nmLt, tpLt, hrgLt, descLt;
     private TextInputEditText nmTxt, tpTxt, hrgTxt, descTxt;
     private MaterialButton nmBtn, tpBtn, hrgBtn, dtlBtn, descBtn;
-    private String id, nmStr = "", tpStr = "", imgUri = "", hrgStr = "", descStr = "", conStr = "", mnfStr = "", wghStr = "", clrStr = "", stkStr = "";
+    private String nmStr = "";
+    private String tpStr = "";
+    private final String imgUri = "";
+    private String hrgStr = "";
+    private String descStr = "";
+    private String conStr = "";
+    private String mnfStr = "";
+    private String wghStr = "";
+    private String clrStr = "";
+    private String stkStr = "";
 
     private RelativeLayout menuBg;
     private ScrollView scrollView;
@@ -103,22 +97,27 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
     private TextView textAlert;
     private MaterialButton exec;
 
+    private Uri imagePath;
+
     private boolean isKeyboardShowing = false, active = false;
     private int i = 0, imageHeight = 0, layout = 0, oriHeight;
     private static final int RESULT_LOAD_IMG = 200;
-    private Long hrgVal, stkVal;
-    private Uri imagePath;
+    private Long valueHarga, stkVal;
 
-    Product recyclerData = new Product();
     private final StorageReference mStorage = FirebaseStorage.getInstance().getReference().child("Images");
     private StorageReference sRef;
 
+    ProductDatabase productDatabase = new ProductDatabase();
+    Product recyclerData = new Product();
+    public final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("Product");
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_update_barang);
+        setContentView(R.layout.activity_tambah_barang);
         Objects.requireNonNull(getSupportActionBar()).hide();
-        getWindow().setStatusBarColor(getResources().getColor(R.color.blue));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.green));
         getWindow().setNavigationBarColor(getResources().getColor(R.color.darkBackground));
 
         nmLt = findViewById(R.id.eNmLt);
@@ -163,8 +162,6 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
         save = findViewById(R.id.save);
         clear = findViewById(R.id.clear);
 
-        toDef();
-
         nmBtn.setOnClickListener(view -> {
             layout = 1;
             onBtnClick(view);
@@ -185,9 +182,10 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
             layout = 5;
             onBtnClick(view);
         });
-    
+
         findViewById(R.id.selectImage).setOnClickListener(view -> {
-            if (isKeyboardShowing) imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            if (isKeyboardShowing)
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
             photoPickerIntent.setType("image/*");
             startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
@@ -224,50 +222,43 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
             if (nmStr.isEmpty()) {
                 cancel = true;
                 layout = 1;
-                onBtnClick(nmBtn);
-            }
-            else if (tpStr.isEmpty()) {
+                onBtnClick(view);
+            } else if (tpStr.isEmpty()) {
                 cancel = true;
                 layout = 2;
-                onBtnClick(tpBtn);
-            }
-            else if (selectedImage == null) {
+                onBtnClick(view);
+            } else if (selectedImage == null) {
                 cancel = true;
                 isSelected.setText("Image required");
-                if (isKeyboardShowing) imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                if (isKeyboardShowing)
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, RESULT_LOAD_IMG);
-            }
-            else if (hrgStr.isEmpty() || hrgVal == 0) {
+            } else if (hrgStr.isEmpty() || valueHarga == 0) {
                 cancel = true;
                 layout = 3;
-                onBtnClick(hrgBtn);
-            }
-            else if (conStr.isEmpty()) {
+                onBtnClick(view);
+            } else if (conStr.isEmpty()) {
                 cancel = true;
                 layout = 4;
-                onBtnClick(dtlBtn);
-            }
-            else if (mnfStr.isEmpty()) {
+                onBtnClick(view);
+            } else if (mnfStr.isEmpty()) {
                 cancel = true;
                 layout = 4;
-                onBtnClick(dtlBtn);
-            }
-            else if (wghStr.isEmpty()) {
+                onBtnClick(view);
+            } else if (wghStr.isEmpty()) {
                 cancel = true;
                 layout = 4;
-                onBtnClick(dtlBtn);
-            }
-            else if (clrStr.isEmpty()) {
+                onBtnClick(view);
+            } else if (clrStr.isEmpty()) {
                 cancel = true;
                 layout = 4;
-                onBtnClick(dtlBtn);
-            }
-            else if (descStr.isEmpty()) {
+                onBtnClick(view);
+            } else if (descStr.isEmpty()) {
                 cancel = true;
                 layout = 5;
-                onBtnClick(descBtn);
+                onBtnClick(view);
             }
 
 
@@ -288,13 +279,14 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
 
                 customAlertDialogView.findViewById(R.id.exec).setOnClickListener(view1 -> {
                     indicator.show();
-                    recyclerData = new Product(id, nmStr, tpStr, imgUri, hrgVal, conStr, mnfStr, wghStr, clrStr, stkVal, descStr);
-                    updateProduct();
+                    recyclerData = new Product("id", nmStr, tpStr, imagePath.toString(), valueHarga, conStr, mnfStr, wghStr, clrStr, stkVal, descStr);
+                    createProduct();
+
                     alertDialog.dismiss();
 
                 });
             } else {
-                Toast.makeText(this, "Field must not be empty, " + layout, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Field must not be empty", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -313,22 +305,23 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
             exec.setText(getResources().getString(R.string.clear));
             customAlertDialogView.findViewById(R.id.exec).setOnClickListener(view2 -> {
                 alertDialog.dismiss();
-                toDef();
+                toClear();
             });
         });
+
+        ArrayList<String> dtl = new ArrayList<>();
+        dtl.add("");
+        dtl.add("");
+        dtl.add("");
+        dtl.add("");
+        dtl.add("");
 
         ArrayList<RecyclerText> textArrayList = new ArrayList<>();
         textArrayList.add(new RecyclerText(getResources().getString(R.string.eCon)));
         textArrayList.add(new RecyclerText(getResources().getString(R.string.eMnf)));
         textArrayList.add(new RecyclerText(getResources().getString(R.string.eWgh)));
         textArrayList.add(new RecyclerText(getResources().getString(R.string.eClr)));
-
-        ArrayList<String> dtl = new ArrayList<>();
-        dtl.add(conStr);
-        dtl.add(mnfStr);
-        dtl.add(wghStr);
-        dtl.add(clrStr);
-        dtl.add(stkStr);
+        textArrayList.add(new RecyclerText(getResources().getString(R.string.eStk)));
 
         RecyclerView recyclerView = findViewById(R.id.dtlTxtRV);
         TextScrollAdapter scrollTextAdapter = new TextScrollAdapter(textArrayList, this, this, dtl);
@@ -473,7 +466,7 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
                     @Override
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                         tpStr = String.valueOf(Objects.requireNonNull(tpTxt.getText()));
-                        if (tpStr.isEmpty()) tpBtn.setText(R.string.eItemName);
+                        if (tpStr.isEmpty()) tpBtn.setText(R.string.eItemType);
                         else tpBtn.setText(tpStr);
                     }
 
@@ -496,7 +489,7 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         BigDecimal vHrg = MoneyTextWatcher.parseCurrencyValue(Objects.requireNonNull(hrgTxt.getText()).toString());
-                        hrgVal = vHrg.longValue();
+                        valueHarga = vHrg.longValue();
                         final Handler handler = new Handler();
                         handler.postDelayed(() -> {
                             hrgStr = String.valueOf(vHrg);
@@ -534,7 +527,8 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
                     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
                         descStr = String.valueOf(Objects.requireNonNull(descTxt.getText()));
-                        if (descStr.isEmpty()) setDesc.setText(R.string.product_description_content);
+                        if (descStr.isEmpty())
+                            setDesc.setText(R.string.product_description_content);
                         else setDesc.setText(descStr);
                     }
 
@@ -590,17 +584,18 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
         if (clrStr.isEmpty()) clr.setText(R.string.eItemColor);
         else clr.setText(clrStr);
         if (stkStr.isEmpty()) stk.setText(R.string.eItemStock);
-        else {stk.setText(stkStr); stkVal = Long.parseLong(stkStr);}
+        else {
+            stk.setText(stkStr);
+            stkVal = Long.parseLong(stkStr);
+        }
     }
 
     @Override
     protected void onActivityResult(int reqCode, int resultCode, Intent data) {
         super.onActivityResult(reqCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
             try {
                 imagePath = data.getData();
-                imgUri = imagePath.toString();
                 selectedImage = new Compressor(this).compressToBitmap(FileUtil.from(this, imagePath));
                 Glide.with(this).load(imagePath).into(imageView);
 
@@ -615,6 +610,7 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
 
     private void revertAnimCloseKey() {
         Animation a = new Animation() {
+
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) menuBg.getLayoutParams();
@@ -631,65 +627,31 @@ public class UpdateBarang extends AppCompatActivity implements GetProductDetail 
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip, r.getDisplayMetrics());
     }
 
-    private void toDef() {
-        format.setMaximumFractionDigits(0);
-        Bundle extras = getIntent().getExtras();
-        recyclerData = (Product) extras.getSerializable("chosenProduct");
-        id = recyclerData.getproductId();
-        nmStr = recyclerData.getProductName();
-        tpStr = recyclerData.getproductType();
-        imgUri = recyclerData.getproductImage();
-        hrgVal = recyclerData.getproductPrice();
-        conStr = recyclerData.getproductCondition();
-        mnfStr = recyclerData.getproductManufacter();
-        wghStr = recyclerData.getproductWeight();
-        clrStr = recyclerData.getproductColor();
-        stkVal = recyclerData.getproductStock();
-        descStr = recyclerData.getproductDescription();
-
-        hrgStr = String.valueOf(hrgVal);
-        stkStr = String.valueOf(stkVal);
-
-        nmBtn.setText(nmStr);
-        nmTxt.setText(nmStr);
-        tpBtn.setText(tpStr);
-        tpTxt.setText(tpStr);
-        Glide.with(this).load(imgUri).listener(new RequestListener<Drawable>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                return false;
-            }
-            @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                new Handler().postDelayed(() -> {
-                    selectedImage = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                    imageHeight = selectedImage.getHeight();
-                    findViewById(R.id.onLoad).setVisibility(View.GONE);
-                }, 0);
-                return false;
-            }
-        }).into(imageView);
-        hrgBtn.setText(hrgStr);
-        hrgTxt.setText(hrgStr);
-        con.setText(conStr);
-        mnf.setText(mnfStr);
-        wgh.setText(wghStr);
-        clr.setText(clrStr);
-        stk.setText(stkStr);
-        setDesc.setText(descStr);
-        descTxt.setText(descStr);
-
+    private void toClear() {
+        nmStr = "";
+        tpStr = "";
+        hrgStr = "";
+        descStr = "";
+        conStr = "";
+        mnfStr = "";
+        wghStr = "";
+        clrStr = "";
+        nmTxt.setText(null);
+        tpTxt.setText(null);
+        hrgTxt.setText(null);
+        descTxt.setText(null);
+        imageView.setImageDrawable(null);
     }
 
-    private void updateProduct() {
-        new VolleyServerRequest(getApplicationContext(), ServerAPI.URL_UPDATE_PRODUCT, recyclerData, selectedImage, new VolleyOnEventListener() {
+    private void createProduct() {
+        new VolleyServerRequest(getApplicationContext(), ServerAPI.URL_CREATE_PRODUCT, recyclerData, selectedImage, new VolleyOnEventListener() {
             @Override
             public void onSuccess(String res) {
                 Log.d("VolleyReq", "onSuccess: " + res);
                 JsonObject responseResult = new Gson().fromJson(res, JsonObject.class);
                 JsonPrimitive message = responseResult.get("message").getAsJsonPrimitive();
                 if (responseResult.get("error").getAsBoolean())
-                    Snackbar.make(findViewById(R.id.root), message.getAsString(), 4800).
+                    Snackbar.make(findViewById(R.id.root), message.getAsString(), 3200).
                             setBackgroundTint(getResources().getColor(R.color.accentBackground)).
                             setTextColor(getResources().getColor(R.color.whiteAccent)).show();
                 else {

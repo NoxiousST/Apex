@@ -127,6 +127,8 @@
             android:text="Login"
             app:spinning_bar_padding="@dimen/m8"
             android:textAllCaps="false"
+            app:finalCornerAngle="@dimen/m64"
+            app:initialCornerAngle="@dimen/m64"
             app:spinning_bar_color="@color/white"
             android:textColor="@color/whiteAccent"
             android:textFontWeight="900"

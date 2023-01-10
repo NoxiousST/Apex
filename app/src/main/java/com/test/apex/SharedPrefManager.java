@@ -2,11 +2,9 @@ package com.test.apex;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.test.apex.ui.Products.Product;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -22,9 +20,14 @@ public class SharedPrefManager {
     //the constants
     private static final String SHARED_PREF_USER = "usersharedpref";
     private static final String SHARED_PREF_PRODUCTS = "productssharedpref";
+
+    private static final String KEY_PROFILE = "keyprofile";
     private static final String KEY_USERNAME = "keyusername";
     private static final String KEY_EMAIL = "keyemail";
     private static final String KEY_PASSWORD = "keypassword";
+    private static final String KEY_PHONE = "keyphone";
+    private static final String KEY_GENDER = "keygender";
+    private static final String KEY_BIRTHDATE = "keybirthdate";
     private static final String KEY_LOGIN = "login";
     private static final String KEY_ID = "keyid";
     private static final String KEY_PRODUCTS = "keyproducts";
@@ -49,9 +52,13 @@ public class SharedPrefManager {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_USER, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(KEY_ID, user.getId());
+        editor.putString(KEY_PROFILE, user.getProfilePicture());
         editor.putString(KEY_USERNAME, user.getUsername());
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_PASSWORD, user.getPassword());
+        editor.putString(KEY_PHONE, user.getPhoneNumber());
+        editor.putString(KEY_GENDER, user.getGender());
+        editor.putString(KEY_BIRTHDATE, user.getBirthDate());
         editor.putString(KEY_LOGIN, user.getLoginOption());
         editor.apply();
     }
@@ -67,9 +74,13 @@ public class SharedPrefManager {
         SharedPreferences sharedPreferences = mCtx.getSharedPreferences(SHARED_PREF_USER, Context.MODE_PRIVATE);
         return new User(
                 sharedPreferences.getString(KEY_ID, null),
+                sharedPreferences.getString(KEY_PROFILE, null),
                 sharedPreferences.getString(KEY_USERNAME, null),
                 sharedPreferences.getString(KEY_EMAIL, null),
                 sharedPreferences.getString(KEY_PASSWORD, null),
+                sharedPreferences.getString(KEY_PHONE, null),
+                sharedPreferences.getString(KEY_GENDER, null),
+                sharedPreferences.getString(KEY_BIRTHDATE, null),
                 sharedPreferences.getString(KEY_LOGIN, null)
         );
     }
@@ -93,7 +104,6 @@ public class SharedPrefManager {
 
         editor.putString(KEY_PRODUCTS, json);
         editor.apply();
-        Toast.makeText(mCtx, "Saved to SharePref", Toast.LENGTH_SHORT).show();
     }
 
     public ArrayList<Product> loadProductList() {

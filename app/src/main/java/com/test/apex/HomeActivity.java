@@ -1,8 +1,7 @@
-package com.test.apex.ui.Products;
+package com.test.apex;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -22,7 +21,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -37,7 +35,6 @@ import java.util.Objects;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -49,16 +46,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.reflect.TypeToken;
 import com.robinhood.ticker.TickerView;
-import com.test.apex.KeranjangActivity;
-import com.test.apex.R;
-import com.test.apex.ReceivePosition;
-import com.test.apex.ScrollAdapter;
-import com.test.apex.SharedPrefManager;
-import com.test.apex.UpdateUserActivity;
-import com.test.apex.VolleyOnEventListener;
-import com.test.apex.VolleyServerRequest;
-import com.test.apex.User;
-import com.test.apex.LoginActivity;
 import com.test.apex.network.ServerAPI;
 import com.yarolegovich.discretescrollview.DSVOrientation;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
@@ -114,7 +101,10 @@ public class HomeActivity extends AppCompatActivity implements ReceivePosition {
             switch (item.getItemId()) {
                 case R.id.cart:
                     startActivity(new Intent(HomeActivity.this, KeranjangActivity.class));
-                    break;
+                    return false;
+                case R.id.history:
+                    startActivity(new Intent(HomeActivity.this, TransactionActivity.class));
+                    return false;
                 case R.id.logout:
                     if (!isLogout(this, user.getLoginOption())) {
                         return false;
@@ -154,16 +144,8 @@ public class HomeActivity extends AppCompatActivity implements ReceivePosition {
                     startActivity(mapIntent);
                     return true;
                 case R.id.upd:
-                    Intent updIntent = new Intent(HomeActivity.this, UpdateUserActivity.class);
+                    Intent updIntent = new Intent(HomeActivity.this, ProfileActivity.class);
                     startActivity(updIntent);
-                    return true;
-                case R.id.logout:
-                    if (!isLogout(this, user.getLoginOption())) {
-                        return false;
-                    }
-                    SharedPrefManager.getInstance(this).logout();
-                    startActivity(new Intent(this, LoginActivity.class));
-                    finish();
                     return true;
             }
             return false;

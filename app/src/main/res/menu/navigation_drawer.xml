@@ -16,6 +16,11 @@
             android:checkable="true"
             android:title="Keranjang" />
         <item
+            android:id="@+id/history"
+            android:icon="@drawable/chevron_forward"
+            android:checkable="true"
+            android:title="Daftar Transaksi" />
+        <item
             android:id="@+id/logout"
             android:icon="@drawable/chevron_forward"
             android:checkable="true"

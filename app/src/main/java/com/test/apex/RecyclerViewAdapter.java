@@ -1,12 +1,9 @@
-package com.test.apex.ui.Products;
-
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+package com.test.apex;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,20 +18,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -44,12 +35,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.test.apex.Cart;
-import com.test.apex.R;
-import com.test.apex.ReceivePosition;
-import com.test.apex.SharedPrefManager;
-import com.test.apex.User;
-import com.test.apex.VolleySingleton;
 import com.test.apex.database.CartFirebase;
 
 import java.text.NumberFormat;
@@ -105,21 +90,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         format.setMaximumFractionDigits(0);
         recyclerData = productArrayList.get(position);
         holder.progressIndicator.show();
-        Glide.with(mcontext).load(recyclerData.getproductImage()).listener(new RequestListener<Drawable>() {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                return false;
-            }
-
-            @Override
-            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                holder.progressIndicator.hide();
-                return false;
-            }
-        }).into(holder.itemImage);
 
         String url = productArrayList.get(position).getproductImage();
         mImageLoader = VolleySingleton.getInstance(mcontext).getImageLoader();
+        holder.progressIndicator.hide();
         holder.itemImage.setImageUrl(url, mImageLoader);
 
 
@@ -127,9 +101,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.itemDesc.setText(String.valueOf(recyclerData.getproductType()));
         holder.itemPrice.setText(format.format(recyclerData.getproductPrice()));
         if (recyclerData.getproductManufacter().equals("SteelSeries"))
-            holder.itemManufacter.setImageDrawable(mcontext.getResources().getDrawable(R.drawable.steelseries_logo));
+            holder.itemManufacter.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.steelseries_logo));
         else
-            holder.itemManufacter.setImageDrawable(mcontext.getResources().getDrawable(R.drawable.steelseries_logo));
+            holder.itemManufacter.setImageDrawable(ContextCompat.getDrawable(mcontext, R.drawable.steelseries_logo));
 
         holder.cardCV.setOnClickListener(view -> {
             recyclerData = productArrayList.get(position);

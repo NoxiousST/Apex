@@ -1,6 +1,5 @@
 package com.test.apex;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -10,12 +9,9 @@ import androidx.core.content.ContextCompat;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -27,13 +23,13 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.Profile;
 import com.facebook.ProfileTracker;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -47,26 +43,18 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.test.apex.database.UserDatabase;
 import com.test.apex.databinding.ActivityLoginBinding;
-import com.test.apex.ui.Products.HomeActivity;
 import com.test.apex.network.ServerAPI;
-import com.test.apex.ui.Products.Product;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String EMPTY = "";
     TextInputEditText editTextUsername, editTextPassword;
     TextInputLayout textLayoutUsername, textLayoutPassword;
     private LinearProgressIndicator progressBar;
@@ -86,6 +74,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private static final String EMAIL = "email";
     ProfileTracker profileTracker;
     AccessToken accessToken;
+    ObjectMapper mapper = new ObjectMapper();
+    String urlLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,8 +116,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         binding.btnLogin.setOnClickListener(view -> {
             if (!checkInput()) {
-                if (!isEmail(username)) userLoginUsername();
-                else userLoginEmail();
+                binding.btnLogin.startAnimation();
+                if (!isEmail(username)) urlLogin = ServerAPI.URL_LOGIN_USERNAME;
+                else urlLogin = ServerAPI.URL_LOGIN_EMAIL;
+
+                getLogin();
             }
         });
         findViewById(R.id.btnRegister).setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
@@ -149,9 +142,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             task.getResult(ApiException.class);
                             User user = new User(
                                     task.getResult().getId(),
+                                    EMPTY,
                                     task.getResult().getDisplayName(),
                                     task.getResult().getEmail(),
-                                    task.getResult().getIdToken(),
+                                    EMPTY,
+                                    EMPTY,
+                                    EMPTY,
+                                    EMPTY,
                                     "Google"
                             );
                             SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
@@ -163,7 +160,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
                         }
                     }
-
                 });
 
         callbackManager = CallbackManager.Factory.create();
@@ -183,9 +179,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                                         User user = new User(
                                                 id,
+                                                EMPTY,
                                                 name,
                                                 email,
-                                                "",
+                                                EMPTY,
+                                                EMPTY,
+                                                EMPTY,
+                                                EMPTY,
                                                 "Facebook"
                                         );
 
@@ -230,6 +230,54 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void getLogin() {
+        User user = new User(
+                EMPTY,
+                EMPTY,
+                username,
+                username,
+                password,
+                EMPTY,
+                EMPTY,
+                EMPTY,
+                "MySQL"
+        );
+        new UserDatabase(getApplicationContext(), urlLogin, user, icon, new VolleyOnEventListener() {
+            @Override
+            public void onSuccess(String res) {
+
+                Log.d("VolleyReq", "onSuccess: " + res);
+
+                try {
+                    JsonNode node = mapper.readTree(res);
+                    if (node.get("error").asBoolean()) {
+                        binding.btnLogin.revertAnimation();
+                        binding.btnLogin.recoverInitialState();
+                        Snackbar.make(binding.getRoot(), node.get("message").asText(), Snackbar.LENGTH_LONG)
+                                .setBackgroundTint(getResources().getColor(R.color.accentBackground)).
+                                setTextColor(getResources().getColor(R.color.whiteAccent)).show();
+                        return;
+                    }
+                    binding.btnLogin.doneLoadingAnimation(getResources().getColor(R.color.blue), icon);
+                    User user = mapper.treeToValue(node.get("user"), User.class);
+                    user.setLoginOption("MySQL");
+                    SharedPrefManager.getInstance(LoginActivity.this).userLogin(user);
+                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                    finish();
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {
+                Snackbar.make(binding.getRoot(), error, 4800).
+                        setBackgroundTint(getResources().getColor(R.color.accentBackground)).
+                        setTextColor(getResources().getColor(R.color.whiteAccent)).show();
+            }
+        });
+    }
+
     private boolean checkInput() {
         cancel = false;
         username = Objects.requireNonNull(editTextUsername.getText()).toString();
@@ -250,166 +298,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     private boolean isEmail(String str) {
         return Patterns.EMAIL_ADDRESS.matcher(str).matches();
-    }
-
-    private void userLoginUsername() {
-        class UserLogin extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-
-                binding.btnLogin.startAnimation();
-                binding.btnLogin.setOnClickListener(view -> {
-                    binding.btnLogin.recoverInitialState();
-                });
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                Log.d("ICON", icon.toString());
-                binding.btnLogin.setPaddingProgress(0);
-
-                try {
-                    JSONObject obj = new JSONObject(s);
-
-
-                    if (!obj.getBoolean("error")) {
-
-
-                        binding.btnLogin.doneLoadingAnimation(getResources().getColor(R.color.blue), icon);
-
-                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                        JSONObject userJson = obj.getJSONObject("user");
-
-                        User user = new User(
-                                userJson.getString("id"),
-                                userJson.getString("username"),
-                                userJson.getString("email"),
-                                userJson.getString("password"),
-                                "MySQL"
-                        );
-                        Log.d("USER", user.getUsername());
-                        SharedPrefManager.getInstance(LoginActivity.this).userLogin(user);
-
-                        new Handler().postDelayed(() -> {
-                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                            finish();
-                        }, 800);
-                    } else {
-                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                RequestHandler requestHandler = new RequestHandler();
-
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", username);
-                params.put("password", password);
-
-                return requestHandler.sendPostRequest(ServerAPI.URL_LOGIN_USERNAME, params);
-            }
-        }
-
-        UserLogin ul = new UserLogin();
-        ul.execute();
-    }
-
-    private void userLoginEmail() {
-        class UserLogin extends AsyncTask<Void, Void, String> {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                progressBar.show();
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                progressBar.hide();
-                try {
-                    JSONObject obj = new JSONObject(s);
-                    if (!obj.getBoolean("error")) {
-                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                        JSONObject userJson = obj.getJSONObject("user");
-                        User user = new User(
-                                userJson.getString("id"),
-                                userJson.getString("username"),
-                                userJson.getString("email"),
-                                userJson.getString("password"),
-                                "MySQL"
-                        );
-                        SharedPrefManager.getInstance(LoginActivity.this).userLogin(user);
-
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                        finish();
-                    } else {
-                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            protected String doInBackground(Void... voids) {
-                RequestHandler requestHandler = new RequestHandler();
-
-                HashMap<String, String> params = new HashMap<>();
-                params.put("email", username);
-                params.put("password", password);
-
-                return requestHandler.sendPostRequest(ServerAPI.URL_LOGIN_EMAIL, params);
-            }
-        }
-
-        UserLogin ul = new UserLogin();
-        ul.execute();
-    }
-
-    private void readProduct() {
-        Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.logoapex);
-        String N = "NULL";
-        Product newProduct = new Product(N, N, N, N, 0L, N, N, N, N, 0L, N);
-
-        new VolleyServerRequest(getApplicationContext(), ServerAPI.URL_READ_PRODUCT, newProduct, bitmap, new VolleyOnEventListener() {
-            @Override
-            public void onSuccess(String res) {
-                Log.d("VolleyReq", "onSuccess: " + res);
-
-
-                try {
-                    JSONObject responseResult = null;
-                    responseResult = new JSONObject(res);
-
-                    JSONArray products = responseResult.getJSONArray("products");
-
-                    Log.d("JsonArray", products.toString());
-
-                    Type type = new TypeToken<List<Product>>() {
-                    }.getType();
-                    List<Product> productList = new Gson().fromJson(products.toString(), type);
-                    SharedPrefManager.getInstance(getBaseContext()).saveProductList(new ArrayList<>(productList));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(String error) {
-                Snackbar.make(findViewById(R.id.root), error, 4800).
-                        setBackgroundTint(getResources().getColor(R.color.accentBackground)).
-                        setTextColor(getResources().getColor(R.color.whiteAccent)).show();
-            }
-        });
     }
 
     public static Bitmap drawableToBitmap(Drawable drawable) {

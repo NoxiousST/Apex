@@ -1,4 +1,4 @@
-package com.test.apex.ui.Products;
+package com.test.apex;
 
 import android.content.Context;
 import android.widget.Toast;
