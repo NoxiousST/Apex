@@ -16,6 +16,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -64,7 +65,11 @@ public class VolleyServerRequest {
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(reqMethod, urlProduct, response -> {
             String resultResponse = new String(response.data);
             Log.d("Response", resultResponse);
-            mCallBack.onSuccess(resultResponse);
+            try {
+                mCallBack.onSuccess(resultResponse);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
 
         }, error -> {
             NetworkResponse networkResponse = error.networkResponse;
@@ -99,7 +104,11 @@ public class VolleyServerRequest {
                 }
             }
             Log.i("Error", errorMessage);
-            mCallBack.onSuccess(errorMessage);
+            try {
+                mCallBack.onSuccess(errorMessage);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
             error.printStackTrace();
         }) {
             @Override

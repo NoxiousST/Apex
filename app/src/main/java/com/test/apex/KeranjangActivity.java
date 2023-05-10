@@ -4,11 +4,13 @@ import static android.content.ContentValues.TAG;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -43,6 +45,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class KeranjangActivity extends AppCompatActivity implements ReceiveCartPosition {
 
     private static final Locale locale = new Locale("id", "ID");
@@ -68,6 +75,7 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
     ArrayList<ProductTransaction> productTransactionList = new ArrayList<>();
     ObjectMapper mapper = new ObjectMapper();
     String userid;
+    APIInterface apiInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +93,8 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
         viewItems = findViewById(R.id.items);
         viewSubTotal = findViewById(R.id.subTotal);
         recyclerView = findViewById(R.id.itemRV);
+
+        apiInterface = APIClient.getClient().create(APIInterface.class);
 
         cartArrayList = new ArrayList<>();
 
@@ -111,7 +121,7 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
 
         binding.toCheckout.setOnClickListener(view -> {
             if (deliveryAmount > 0)
-                createTransaction();
+                readCounter();
             else
                 activityResultLauncher.launch(new Intent(KeranjangActivity.this, MapActivity.class));
         });
@@ -201,86 +211,79 @@ public class KeranjangActivity extends AppCompatActivity implements ReceiveCartP
         binding.totalAmount.setText(format.format(totalAmount));
     }
 
-    private void createTransaction() {
+    private void readCounter() {
 
-        new TransactionDatabase(getApplicationContext(), new VolleyOnEventListener() {
+        Call<Object> call = apiInterface.retrieveCount(userID);
+
+        call.enqueue(new Callback<Object>() {
             @Override
-            public void onSuccess(String res) {
-                Log.d("RESPONSE", "res: " + res);
-                try {
+            public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String respData = mapper.writeValueAsString(response.body());
+                        JsonNode actualObj = mapper.readTree(respData);
 
-                    JsonNode actualObj = mapper.readTree(res);
-                    transactionCounter = actualObj.get("count").asInt() + 1;
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                Log.d("USER", "user: " + user.toMap());
-
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", locale);
-                String date = simpleDateFormat.format(new Date());
-                if (user.getLoginOption().equals("MySQL"))
-                    userid = String.format(Locale.getDefault(), "%04d", Long.parseLong(userID));
-                else
-                    userid = String.format(Locale.getDefault(), "%04d", Long.parseLong(userID.substring(userID.length() - 4)));
-
-                String transactionNumber = String.format(Locale.getDefault(), "%03d", transactionCounter);
-                String invoiceNumber = "INV/" + date + "-" + userid + "-" + transactionNumber;
-
-                SimpleDateFormat invDate = new SimpleDateFormat("dd MMMM yyyy", locale);
-                String invoiceDate = invDate.format(new Date());
-
-
-
-                String productList = null;
-                try {
-                    productList = mapper.writeValueAsString(cartArrayList);
-                    Log.d("List", "List: " + productList);
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
-
-
-                transaction = new Transaction("99", invoiceNumber, "Pending", totalAmount, address, invoiceDate, "-", userID, productList);
-                new TransactionDatabase(getApplicationContext(), ServerAPI.URL_CREATE_TRANSACTION, transaction, new VolleyOnEventListener() {
-                    @Override
-                    public void onSuccess(String res) {
-                        Log.d("VolleyReq", "onSuccess: " + res);
-
-                        try {
-                            JsonNode node = mapper.readTree(res);
-                            if (!node.get("error").asBoolean()) {
-                                Intent intent = new Intent(KeranjangActivity.this, InvoiceActivity.class);
-                                transaction.setTransactionId(node.get("lastId").asText());
-                                intent.putExtra("transactionInvoice", transaction);
-                                startActivity(intent);
-                            }
-                        } catch (JsonProcessingException e) {
-                            e.printStackTrace();
-                        }
-
-
+                        createTransaction(actualObj.get("count").asInt() + 1);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
                     }
-
-                    @Override
-                    public void onFailure(String error) {
-                        Snackbar.make(findViewById(R.id.root), error, 4800).
-                                setBackgroundTint(getResources().getColor(R.color.accentBackground)).
-                                setTextColor(getResources().getColor(R.color.whiteAccent)).show();
-                    }
-                });
-
-
+                }
             }
 
             @Override
-            public void onFailure(String error) {
-                Log.d(TAG, error);
-                Snackbar.make(binding.getRoot(), error, 6500)
-                        .setBackgroundTint(getResources().getColor(R.color.accentBackground)).
-                        setTextColor(getResources().getColor(R.color.whiteAccent)).show();
+            public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
+                Log.d("Response Fail", "onFail: " + t.getMessage());
+                t.printStackTrace();
+
             }
         });
     }
 
+    private void createTransaction(int count) {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd", locale);
+        String date = simpleDateFormat.format(new Date());
+        if (user.getLoginOption().equals("MySQL")) userid = String.format(Locale.getDefault(), "%04d", Long.parseLong(userID));
+        else userid = String.format(Locale.getDefault(), "%04d", Long.parseLong(userID.substring(userID.length() - 4)));
+
+        String transactionNumber = String.format(Locale.getDefault(), "%03d", count);
+        String invoiceNumber = "INV/" + date + "-" + userid + "-" + transactionNumber;
+        SimpleDateFormat invDate = new SimpleDateFormat("dd MMMM yyyy", locale);
+        String invoiceDate = invDate.format(new Date());
+
+        String productList = null;
+        try {
+            productList = mapper.writeValueAsString(cartArrayList);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        Call<Object> call = apiInterface.setTransaction(invoiceNumber, "Pending", totalAmount, address, invoiceDate, "-", userID, productList);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
+                if (response.isSuccessful()) {
+                    try {
+                        String respData = mapper.writeValueAsString(response.body());
+                        JsonNode node = mapper.readTree(respData);
+                        if (!node.get("error").asBoolean()) {
+                            Intent intent = new Intent(KeranjangActivity.this, InvoiceActivity.class);
+                            transaction.setTransactionId(node.get("lastId").asText());
+                            intent.putExtra("transactionDetail", transaction);
+                            startActivity(intent);
+                        }
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
+                Log.d("Response Fail", "onFail: " + t.getMessage());
+                t.printStackTrace();
+
+            }
+        });
+    }
 }

@@ -42,6 +42,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import java.time.YearMonth;
 
 public class MapActivity extends AppCompatActivity implements MainContract.View, ReceiveDeliveryAmount {
 
@@ -77,6 +78,8 @@ public class MapActivity extends AppCompatActivity implements MainContract.View,
     String mapNegara;
     String fullAlamat;
     long pengiriman;
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @SuppressLint("SetTextI18n")
@@ -252,5 +255,13 @@ public class MapActivity extends AppCompatActivity implements MainContract.View,
     @Override
     public void getPengiriman(long pengiriman) {
         this.pengiriman = pengiriman;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void trash() {
+
+        YearMonth currentMonth = YearMonth.now();
+        YearMonth startMonth = currentMonth.minusMonths(100);
+        YearMonth endMonth = currentMonth.plusMonths(100);
     }
 }

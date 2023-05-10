@@ -10,6 +10,7 @@ import com.android.volley.Request;
 import com.android.volley.RetryPolicy;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.test.apex.SharedPrefManager;
 import com.test.apex.Transaction;
 import com.test.apex.VolleyMultipartRequest;
@@ -58,7 +59,11 @@ public class TransactionDatabase {
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, urlProduct, response -> {
             String resultResponse = new String(response.data);
             Log.d("Response", resultResponse);
-            mCallBack.onSuccess(resultResponse);
+            try {
+                mCallBack.onSuccess(resultResponse);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }, error -> {
             NetworkResponse networkResponse = error.networkResponse;
             String errorMessage = "Unknown error";

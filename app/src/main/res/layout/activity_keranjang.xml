@@ -116,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="@dimen/m4"
                         android:fontFamily="@font/nexa_regular"
-                        android:text="Subtotal"
+                        android:text="-"
                         android:textAlignment="textEnd"
                         android:textColor="@color/white"
                         android:textSize="16sp" />
@@ -143,7 +143,7 @@
                         android:layout_marginVertical="@dimen/m4"
                         android:fontFamily="@font/nexa_regular"
                         android:layout_centerVertical="true"
-                        android:text="Pengiriman"
+                        android:text="-"
                         android:layout_alignParentEnd="true"
                         android:textColor="@color/white"
                         android:textSize="16sp" />
@@ -167,7 +167,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="@dimen/m4"
                         android:fontFamily="@font/nexa_regular"
-                        android:text="Pajak"
+                        android:text="-"
                         android:textAlignment="textEnd"
                         android:textColor="@color/white"
                         android:textSize="16sp" />
@@ -191,7 +191,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginVertical="@dimen/m4"
                         android:fontFamily="@font/nexabold"
-                        android:text="Total"
+                        android:text="-"
                         android:textAlignment="textEnd"
                         android:textColor="@color/white"
                         android:textSize="20sp" />

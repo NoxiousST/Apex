@@ -10,6 +10,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.TimeoutError;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.test.apex.R;
 import com.test.apex.SharedPrefManager;
 import com.test.apex.Transaction;
@@ -68,7 +69,11 @@ public class UserDatabase {
         VolleyMultipartRequest multipartRequest = new VolleyMultipartRequest(Request.Method.POST, urlUser, response -> {
             String resultResponse = new String(response.data);
             Log.d("Response", resultResponse);
-            mCallBack.onSuccess(resultResponse);
+            try {
+                mCallBack.onSuccess(resultResponse);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
         }, error -> {
             NetworkResponse networkResponse = error.networkResponse;
             String errorMessage = "Unknown error";

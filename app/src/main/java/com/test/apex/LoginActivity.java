@@ -43,39 +43,39 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
 import com.test.apex.database.UserDatabase;
 import com.test.apex.databinding.ActivityLoginBinding;
 import com.test.apex.network.ServerAPI;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String EMPTY = "";
     TextInputEditText editTextUsername, editTextPassword;
     TextInputLayout textLayoutUsername, textLayoutPassword;
     private LinearProgressIndicator progressBar;
-    JSONParser jsonParser = new JSONParser();
     private String username, password;
-    boolean cancel = false;
     ActivityLoginBinding binding;
-    SignInButton signInButton;
-    private GoogleApiClient googleApiClient;
-    private static final int RC_SIGN_IN = 1;
+
     private ActivityResultLauncher<Intent> activityResultLauncher;
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
     Bitmap icon;
 
     CallbackManager callbackManager;
-    private static final String EMAIL = "email";
-    ProfileTracker profileTracker;
-    AccessToken accessToken;
+
     ObjectMapper mapper = new ObjectMapper();
-    String urlLogin;
+    APIInterface apiInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +91,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         gsc = GoogleSignIn.getClient(this, gso);
 
-        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
 
         progressBar = findViewById(R.id.progress);
         progressBar.hide();
@@ -102,7 +101,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         textLayoutUsername = findViewById(R.id.textLayoutUsername);
         textLayoutPassword = findViewById(R.id.textLayoutPassword);
 
-        Log.d("ICON", icon.toString());
+        apiInterface = APIClient.getClient().create(APIInterface.class);
+
         if (SharedPrefManager.getInstance(this).isLoggedIn()) {
             finish();
             startActivity(new Intent(this, HomeActivity.class));
@@ -114,15 +114,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             return;
         }
 
-        binding.btnLogin.setOnClickListener(view -> {
-            if (!checkInput()) {
-                binding.btnLogin.startAnimation();
-                if (!isEmail(username)) urlLogin = ServerAPI.URL_LOGIN_USERNAME;
-                else urlLogin = ServerAPI.URL_LOGIN_EMAIL;
-
-                getLogin();
-            }
-        });
+        binding.btnLogin.setOnClickListener(view -> checkInput());
         findViewById(R.id.btnRegister).setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
         findViewById(R.id.fpass).setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, FPassActivity.class)));
 
@@ -140,17 +132,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                         try {
                             task.getResult(ApiException.class);
-                            User user = new User(
-                                    task.getResult().getId(),
-                                    EMPTY,
-                                    task.getResult().getDisplayName(),
-                                    task.getResult().getEmail(),
-                                    EMPTY,
-                                    EMPTY,
-                                    EMPTY,
-                                    EMPTY,
-                                    "Google"
-                            );
+
+                            User user = new User();
+                            user.setUsername(task.getResult().getDisplayName());
+                            user.setId(task.getResult().getId());
+                            user.setEmail(task.getResult().getEmail());
+                            user.setLoginOption("Google");
+
                             SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                             finish();
@@ -167,30 +155,17 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(LoginResult loginResult) {
-                        Log.d("Success", "Login");
                         GraphRequest request = GraphRequest.newMeRequest(
                                 loginResult.getAccessToken(),
                                 (object, response) -> {
-
                                     try {
-                                        String id = object.getString("id");
-                                        String name = object.getString("name");
-                                        String email = object.getString("email");
-
-                                        User user = new User(
-                                                id,
-                                                EMPTY,
-                                                name,
-                                                email,
-                                                EMPTY,
-                                                EMPTY,
-                                                EMPTY,
-                                                EMPTY,
-                                                "Facebook"
-                                        );
+                                        User user = new User();
+                                        user.setId(object.getString("id"));
+                                        user.setUsername(object.getString("name"));
+                                        user.setEmail(object.getString("email"));
+                                        user.setLoginOption("Facebook");
 
                                         SharedPrefManager.getInstance(LoginActivity.this).userLogin(user);
-
                                         new Handler().postDelayed(() -> {
                                             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                                             finish();
@@ -216,7 +191,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 });
 
-
         binding.btnFacebook.setOnClickListener(view ->
                 LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this,
                         Arrays.asList("public_profile", "email")));
@@ -230,70 +204,65 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void getLogin() {
-        User user = new User(
-                EMPTY,
-                EMPTY,
-                username,
-                username,
-                password,
-                EMPTY,
-                EMPTY,
-                EMPTY,
-                "MySQL"
-        );
-        new UserDatabase(getApplicationContext(), urlLogin, user, icon, new VolleyOnEventListener() {
-            @Override
-            public void onSuccess(String res) {
+    private void getManualLogin(int option) {
+        Call<Object> call;
+        if (option == 0) call = apiInterface.retrieveLoginUsername(username, password);
+        else call = apiInterface.retrieveLoginEmail(username, password);
 
-                Log.d("VolleyReq", "onSuccess: " + res);
+        call.enqueue(new Callback<Object>() {
+            @Override
+            public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
 
                 try {
-                    JsonNode node = mapper.readTree(res);
-                    if (node.get("error").asBoolean()) {
+                    String respData = mapper.writeValueAsString(response.body());
+                    JsonNode actualObj = mapper.readTree(respData);
+
+                    if (actualObj.get("error").asBoolean()) {
                         binding.btnLogin.revertAnimation();
                         binding.btnLogin.recoverInitialState();
-                        Snackbar.make(binding.getRoot(), node.get("message").asText(), Snackbar.LENGTH_LONG)
+                        Snackbar.make(binding.getRoot(), actualObj.get("message").asText(), Snackbar.LENGTH_LONG)
                                 .setBackgroundTint(getResources().getColor(R.color.accentBackground)).
                                 setTextColor(getResources().getColor(R.color.whiteAccent)).show();
                         return;
                     }
                     binding.btnLogin.doneLoadingAnimation(getResources().getColor(R.color.blue), icon);
-                    User user = mapper.treeToValue(node.get("user"), User.class);
+                    User user = mapper.treeToValue(actualObj.get("user"), User.class);
                     user.setLoginOption("MySQL");
                     SharedPrefManager.getInstance(LoginActivity.this).userLogin(user);
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     finish();
+
                 } catch (JsonProcessingException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
 
             @Override
-            public void onFailure(String error) {
-                Snackbar.make(binding.getRoot(), error, 4800).
-                        setBackgroundTint(getResources().getColor(R.color.accentBackground)).
-                        setTextColor(getResources().getColor(R.color.whiteAccent)).show();
+            public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
+                Log.d("Response Fail", "onFail: " + t.getMessage());
+                t.printStackTrace();
             }
         });
     }
 
-    private boolean checkInput() {
-        cancel = false;
+    private void checkInput() {
+        binding.btnLogin.startAnimation();
         username = Objects.requireNonNull(editTextUsername.getText()).toString();
         password = Objects.requireNonNull(editTextPassword.getText()).toString();
 
         if (TextUtils.isEmpty(username)) {
             textLayoutUsername.setError("Please enter your username");
             textLayoutUsername.requestFocus();
-            cancel = true;
+            return;
         }
         if (TextUtils.isEmpty(password)) {
             textLayoutPassword.setError("Please enter your password");
             textLayoutPassword.requestFocus();
-            cancel = true;
+            return;
         }
-        return cancel;
+        int x = 0;
+        if (isEmail(username)) x = 1;
+        getManualLogin(x);
     }
 
     private boolean isEmail(String str) {

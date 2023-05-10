@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/m16"
+    app:cardCornerRadius="@dimen/m16">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/accent_background_fix"
+        android:orientation="vertical"
+        android:paddingVertical="@dimen/m16"
+        android:paddingHorizontal="@dimen/m24">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logo"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:layout_gravity="center_horizontal"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:padding="@dimen/m16"
+            app:backgroundTint="@color/background_fix"
+            app:cornerRadius="@dimen/m12"
+            app:icon="@drawable/headphone"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="52dp"
+            app:iconTint="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/catalogName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/m4"
+            android:fontFamily="@font/nexabold"
+            android:text="Headset"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logo" />
+
+        <TextView
+            android:id="@+id/item_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nexabold"
+            android:layout_marginTop="@dimen/m4"
+            android:text="8 items"
+            android:textColor="@color/colorLightBlue"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/catalogName" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

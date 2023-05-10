@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_fix"
+    android:padding="@dimen/m24"
+    tools:context=".HomeActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/welcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/adambold"
+                android:text="Welcome back!"
+                android:textColor="@color/accent_text"
+                android:textFontWeight="900" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/m8"
+                android:fontFamily="@font/adambold"
+                android:text="Daniel Kristian"
+                android:textColor="@color/white"
+                android:textFontWeight="900"
+                android:textSize="22sp" />
+
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/m8"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:backgroundTint="@color/background_fix"
+            app:icon="@drawable/dots"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m12"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/welcome">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textLayoutUsername"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/m8"
+            android:layout_marginEnd="@dimen/m8"
+            android:layout_weight="1"
+            android:textColorHint="@color/white"
+            app:boxBackgroundColor="@color/background_fix"
+            app:boxCornerRadiusBottomEnd="@dimen/m12"
+            app:boxCornerRadiusBottomStart="@dimen/m12"
+            app:boxCornerRadiusTopEnd="@dimen/m12"
+            app:boxCornerRadiusTopStart="@dimen/m12"
+            app:boxStrokeColor="@drawable/line_selector_fix"
+            app:boxStrokeWidth="2dp"
+            app:hintEnabled="false"
+            app:startIconDrawable="@drawable/search"
+            app:startIconTint="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nexabold"
+                android:hint="Search item..."
+                android:inputType="textEmailAddress"
+                android:letterSpacing=".025"
+                android:textColor="@color/white"
+                android:textColorHint="#CCCCCC" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="54dp"
+            android:layout_height="54dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/m8"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:rotation="90"
+            app:backgroundTint="@color/background_fix"
+            app:cornerRadius="@dimen/m12"
+            app:icon="@drawable/sliders_v_alt"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:strokeColor="@color/foreground_fix"
+            app:strokeWidth="2dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/catalog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/m8"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/search">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/m8"
+                android:fontFamily="@font/adambold"
+                android:text="Browse by Catalog"
+                android:textColor="@color/white"
+                android:textFontWeight="900"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="0dp"
+                android:text="See All"
+                android:textAlignment="textEnd"
+                android:textColor="@color/colorLightBlue"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/catalogRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/catalog_recycler" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

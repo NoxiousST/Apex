@@ -95,7 +95,7 @@ public class InvoiceActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         Bundle extras = getIntent().getExtras();
-        transaction = extras.getParcelable("transactionInvoice");
+        transaction = extras.getParcelable("transactionDetail");
         Log.d("Intent ID", "id transaction: " + transaction.getTransactionId());
         if (transaction.getTransactionStatus().equals("Success")) {
             ifSuccess();

@@ -38,47 +38,207 @@
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <androidx.core.widget.NestedScrollView
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefresh"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                android:layout_height="match_parent">
 
-                <LinearLayout
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                    <com.yarolegovich.discretescrollview.DiscreteScrollView
-                        android:id="@+id/item_picker"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:stackFromEnd="true" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/m16"
-                        android:layout_marginTop="@dimen/m16"
-                        android:fontFamily="@font/nexabold"
-                        android:text="Featured Products"
-                        android:textColor="@color/white"
-                        android:textSize="22sp" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/itemRV"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center_horizontal"
-                        android:clipToPadding="false"
-                        android:foregroundGravity="center_horizontal"
-                        android:paddingHorizontal="@dimen/m4"
-                        android:paddingBottom="64dp"
-                        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                        app:spanCount="2" />
-                </LinearLayout>
-            </androidx.core.widget.NestedScrollView>
+                        android:orientation="vertical">
+
+                        <com.facebook.shimmer.ShimmerFrameLayout
+                            android:id="@+id/shimmer_top"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <HorizontalScrollView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <include layout="@layout/scroll_recycle_shimmer" />
+
+                                    <include layout="@layout/scroll_recycle_shimmer" />
+
+                                    <include layout="@layout/scroll_recycle_shimmer" />
+                                </LinearLayout>
+                            </HorizontalScrollView>
+
+                        </com.facebook.shimmer.ShimmerFrameLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/contextRecycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            tools:listitem="@layout/scroll_recycle" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/m16"
+                            android:layout_marginTop="@dimen/m16"
+                            android:fontFamily="@font/nexabold"
+                            android:text="Featured Products"
+                            android:textColor="@color/white"
+                            android:textSize="22sp" />
+
+                        <com.facebook.shimmer.ShimmerFrameLayout
+                            android:id="@+id/shimmer_product"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.gridlayout.widget.GridLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:clipToPadding="false"
+                                android:foregroundGravity="center_horizontal"
+                                android:paddingStart="@dimen/m8"
+                                android:paddingEnd="@dimen/m8"
+                                app:columnCount="2"
+                                app:rowCount="4">
+
+                                <include
+                                    layout="@layout/product_recycle_shimmer"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/m4"
+                                    android:layout_marginRight="@dimen/m4"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:layout_weight="1"
+                                    android:visibility="visible"
+                                    app:layout_column="0"
+                                    app:layout_columnWeight="1"
+                                    app:layout_row="0" />
+
+                                <include
+                                    layout="@layout/product_recycle_shimmer"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/m4"
+                                    android:layout_marginTop="@dimen/m4"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:layout_weight="1"
+                                    android:visibility="visible"
+                                    app:layout_column="1"
+                                    app:layout_columnWeight="1"
+                                    app:layout_row="0" />
+
+                                <include
+                                    layout="@layout/product_recycle_shimmer"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/m4"
+                                    android:layout_marginRight="@dimen/m4"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:layout_weight="1"
+                                    android:visibility="visible"
+                                    app:layout_column="0"
+                                    app:layout_columnWeight="1"
+                                    app:layout_row="1" />
+
+                                <include
+                                    layout="@layout/product_recycle_shimmer"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/m4"
+                                    android:layout_marginTop="@dimen/m4"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:layout_weight="1"
+                                    android:visibility="visible"
+                                    app:layout_column="1"
+                                    app:layout_columnWeight="1"
+                                    app:layout_row="1" />
+
+                                <include
+                                    layout="@layout/product_recycle_shimmer"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/m4"
+                                    android:layout_marginRight="@dimen/m4"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:layout_weight="1"
+                                    android:visibility="visible"
+                                    app:layout_column="0"
+                                    app:layout_columnWeight="1"
+                                    app:layout_row="2" />
+
+                                <include
+                                    layout="@layout/product_recycle_shimmer"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/m4"
+                                    android:layout_marginTop="@dimen/m4"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:layout_weight="1"
+                                    android:visibility="visible"
+                                    app:layout_column="1"
+                                    app:layout_columnWeight="1"
+                                    app:layout_row="2" />
+
+                                <include
+                                    layout="@layout/product_recycle_shimmer"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/m4"
+                                    android:layout_marginRight="@dimen/m4"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:layout_weight="1"
+                                    android:visibility="visible"
+                                    app:layout_column="0"
+                                    app:layout_columnWeight="1"
+                                    app:layout_row="3" />
+
+                                <include
+                                    layout="@layout/product_recycle_shimmer"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/m4"
+                                    android:layout_marginTop="@dimen/m4"
+                                    android:layout_marginBottom="@dimen/m4"
+                                    android:layout_weight="1"
+                                    android:visibility="visible"
+                                    app:layout_column="1"
+                                    app:layout_columnWeight="1"
+                                    app:layout_row="3" />
 
 
+                            </androidx.gridlayout.widget.GridLayout>
+
+
+                        </com.facebook.shimmer.ShimmerFrameLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/productRecycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:clipToPadding="false"
+                            android:foregroundGravity="center_horizontal"
+                            android:paddingHorizontal="@dimen/m4"
+                            android:paddingBottom="64dp"
+                            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                            app:spanCount="2"
+                            tools:listitem="@layout/product_recycle" />
+
+                    </LinearLayout>
+
+                </androidx.core.widget.NestedScrollView>
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
         </LinearLayout>
 
 
@@ -93,11 +253,11 @@
 
             <RelativeLayout
                 android:id="@+id/layoutBtn"
-                android:layout_alignParentEnd="true"
                 android:layout_width="0dp"
-                android:layout_marginEnd="@dimen/m24"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_height="wrap_content">
+                android:layout_marginEnd="@dimen/m24">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/toCart"
@@ -108,10 +268,10 @@
 
                     android:background="@drawable/cart_gradient"
                     android:fontFamily="@font/musticaprosemibold"
-                    android:text="Rp"
-                    android:textAlignment="textStart"
                     android:paddingHorizontal="@dimen/m16"
                     android:paddingBottom="@dimen/m4"
+                    android:text="Rp"
+                    android:textAlignment="textStart"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="20sp"
@@ -119,17 +279,17 @@
 
                 <com.robinhood.ticker.TickerView
                     android:id="@+id/tickerView"
-                    android:textStyle="bold"
-                    android:layout_centerVertical="true"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
                     android:gravity="center"
                     android:textColor="@color/white"
-                    android:translationZ="@dimen/m8"
                     android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:translationZ="@dimen/m8"
                     app:ticker_animationDuration="1500"
                     app:ticker_defaultCharacterList="number"
-                    app:ticker_defaultPreferredScrollingDirection="any"/>
+                    app:ticker_defaultPreferredScrollingDirection="any" />
 
             </RelativeLayout>
 

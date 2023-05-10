@@ -3,6 +3,7 @@ package com.test.apex;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +12,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.card.MaterialCardView;
+import com.test.apex.network.ServerAPI;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -26,7 +34,7 @@ public class ScrollAdapter extends RecyclerView.Adapter<ScrollAdapter.ScrollView
     private final Context mcontext;
     NumberFormat format = NumberFormat.getCurrencyInstance(locale);
 
-    public ScrollAdapter(ArrayList<Product> recyclerDataArrayList, Context mcontext) {
+    public ScrollAdapter(Context mcontext, ArrayList<Product> recyclerDataArrayList) {
         this.mainArrayList = recyclerDataArrayList;
         this.mcontext = mcontext;
     }
@@ -42,10 +50,21 @@ public class ScrollAdapter extends RecyclerView.Adapter<ScrollAdapter.ScrollView
     @Override
     public void onBindViewHolder(@NonNull ScrollViewHolder holder, int position) {
 
-        Product recyclerData = mainArrayList.get(position);
-        holder.itemName.setText(recyclerData.getProductName());
-        holder.itemPrice.setText(format.format(recyclerData.getproductPrice()));
-        Glide.with(mcontext).load(recyclerData.getproductImage()).into(holder.itemImage);
+        Product product = mainArrayList.get(position);
+
+        String url = ServerAPI.URL_PRODUCT_IMAGE + product.getproductImage();
+        Glide.with(mcontext).load(url).listener(new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                return false;
+            }
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                holder.itemName.setText(product.getProductName());
+                holder.itemPrice.setText(format.format(product.getproductPrice()));
+                return false;
+            }
+        }).into(holder.itemImage);
     }
 
     @Override

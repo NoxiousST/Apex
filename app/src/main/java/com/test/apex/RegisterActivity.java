@@ -1,12 +1,19 @@
 package com.test.apex;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -18,8 +25,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.test.apex.databinding.ActivityLoginBinding;
+import com.test.apex.databinding.ActivityRegisterBinding;
 import com.test.apex.network.ServerAPI;
 
 import org.json.JSONException;
@@ -30,15 +40,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class RegisterActivity extends AppCompatActivity {
 
-    TextInputEditText editTextUsername, editTextEmail, editTextPassword, editTextRePassword;
-    TextInputLayout textLayoutUsername, textLayoutEmail, textLayoutPassword, textLayoutRePassword;
-    JSONObject obj;
-    ObjectMapper mapper = new ObjectMapper();
-    private LinearProgressIndicator progressBar;
+    private ObjectMapper mapper = new ObjectMapper();
     private String username, email, password, repassword;
-    private boolean cancel = false;
+    private Bitmap icon;
+    private APIInterface apiInterface;
+    private ActivityRegisterBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,222 +60,109 @@ public class RegisterActivity extends AppCompatActivity {
         new StatusBar().statusBar(this);
         getWindow().setNavigationBarColor(getResources().getColor(R.color.darkBackground));
 
-        progressBar = findViewById(R.id.progress);
-        progressBar.hide();
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        editTextUsername = findViewById(R.id.editTextUsername);
-        editTextEmail = findViewById(R.id.editTextEmail);
-        editTextPassword = findViewById(R.id.editTextPassword);
-        editTextRePassword = findViewById(R.id.editTextRePassword);
+        icon = drawableToBitmap(ContextCompat.getDrawable(this, R.drawable.check));
+        apiInterface = APIClient.getClient().create(APIInterface.class);
 
-        textLayoutUsername = findViewById(R.id.textLayoutUsername);
-        textLayoutEmail = findViewById(R.id.textLayoutEmail);
-        textLayoutPassword = findViewById(R.id.textLayoutPassword);
-        textLayoutRePassword = findViewById(R.id.textLayoutRePassword);
-
-        findViewById(R.id.btnRegister).setOnClickListener(view -> {
-            checkInput();
-            if (!cancel) registerUser();
-        });
+        binding.btnRegister.setEnabled(binding.checkBox.isChecked());
+        binding.btnRegister.setOnClickListener(view -> checkInput());
     }
 
     private void checkInput() {
-        username = Objects.requireNonNull(editTextUsername.getText()).toString();
-        email = Objects.requireNonNull(editTextEmail.getText()).toString();
-        password = Objects.requireNonNull(editTextPassword.getText()).toString();
-        repassword = Objects.requireNonNull(editTextRePassword.getText()).toString();
+        binding.btnRegister.startAnimation();
+        username = Objects.requireNonNull(binding.editTextUsername.getText()).toString();
+        email = Objects.requireNonNull(binding.editTextEmail.getText()).toString();
+        password = Objects.requireNonNull(binding.editTextPassword.getText()).toString();
+        repassword = Objects.requireNonNull(binding.editTextRePassword.getText()).toString();
 
         if (TextUtils.isEmpty(username)) {
-            textLayoutUsername.setErrorEnabled(true);
-            textLayoutUsername.setError("*Username cannot be null or empty");
-            textLayoutUsername.requestFocus();
-            cancel = true;
+            binding.textLayoutUsername.setErrorEnabled(true);
+            binding.textLayoutUsername.setError("*Username cannot be null or empty");
+            binding.textLayoutUsername.requestFocus();
+            return;
         } else if (TextUtils.isEmpty(email)) {
-            textLayoutUsername.setErrorEnabled(true);
-            textLayoutEmail.setError("*Email cannot be null or empty");
-            textLayoutEmail.requestFocus();
-            cancel = true;
-        } else if (TextUtils.isEmpty(password)) {
-            textLayoutUsername.setErrorEnabled(true);
-            textLayoutPassword.setError("*Password cannot be null or empty");
-            textLayoutPassword.requestFocus();
-            cancel = true;
+            binding.textLayoutUsername.setErrorEnabled(true);
+            binding.textLayoutEmail.setError("*Email cannot be null or empty");
+            binding.textLayoutEmail.requestFocus();
+            return;
+        }  else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            binding.textLayoutUsername.setErrorEnabled(true);
+            binding.textLayoutEmail.setError("*Email is invalid");
+            binding.textLayoutEmail.requestFocus();
+            return;
+        }else if (TextUtils.isEmpty(password)) {
+            binding.textLayoutUsername.setErrorEnabled(true);
+            binding.textLayoutPassword.setError("*Password cannot be null or empty");
+            binding.textLayoutPassword.requestFocus();
+            return;
         } else if (TextUtils.isEmpty(repassword)) {
-            textLayoutUsername.setErrorEnabled(true);
-            textLayoutRePassword.setError("*Password does not match");
-            textLayoutRePassword.requestFocus();
-            cancel = true;
+            binding.textLayoutUsername.setErrorEnabled(true);
+            binding.textLayoutRePassword.setError("*Password does not match");
+            binding.textLayoutRePassword.requestFocus();
+            return;
         }
+        registerUser();
     }
 
     private void registerUser() {
-
-
-        class RegisterUser extends AsyncTask<Void, Void, String> {
-
+        Call<Object> call = apiInterface.setSignup(username, email, password);
+        call.enqueue(new Callback<Object>() {
             @Override
-            protected String doInBackground(Void... voids) {
-                RequestHandler requestHandler = new RequestHandler();
+            public void onResponse(@NonNull Call<Object> call, @NonNull Response<Object> response) {
 
-                HashMap<String, String> params = new HashMap<>();
-                params.put("username", username);
-                params.put("email", email);
-                params.put("password", password);
-
-                return requestHandler.sendPostRequest(ServerAPI.URL_REGISTER, params);
-            }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                progressBar.show();
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                progressBar.hide();
-                Log.d("WHAT", "1");
                 try {
-                    obj = new JSONObject(s);
-                    if (!obj.getBoolean("error")) {
-                        Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_SHORT).show();
+                    String respData = mapper.writeValueAsString(response.body());
+                    JsonNode actualObj = mapper.readTree(respData);
 
-                        JSONObject userJson = obj.getJSONObject("user");
-                        //User user = new User(
-                                //userJson.getString("id"),
-                                //userJson.getString("username"),
-                                //userJson.getString("email"),
-                                //userJson.getString("password"),
-                                //"MySQL"
-                        //);
-                        //SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
-
-                        JsonNode node = mapper.readTree(s);
-                        User user = mapper.treeToValue(node.get("user"), User.class);
-                        user.setLoginOption("MySQL");
-                        SharedPrefManager.getInstance(RegisterActivity.this).userLogin(user);
-                        startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
-                        finish();
-
-                    } else {
-                        if (obj.getInt("errorCode") == 1) {
-                            textLayoutUsername.setError(obj.getString("message"));
-                            textLayoutUsername.requestFocus();
-                        }
-                        if (obj.getInt("errorCode") == 2) {
-                            textLayoutEmail.setError(obj.getString("message"));
-                            textLayoutEmail.requestFocus();
-                        }
-                        if (!obj.getBoolean("error")) {
-                            Toast.makeText(RegisterActivity.this, (obj.getString("message")), Toast.LENGTH_SHORT).show();
-                        }
+                    if (actualObj.get("error").asBoolean()) {
+                        binding.btnRegister.revertAnimation();
+                        binding.btnRegister.recoverInitialState();
+                        Snackbar.make(binding.getRoot(), actualObj.get("message").asText(), Snackbar.LENGTH_LONG)
+                                .setBackgroundTint(getResources().getColor(R.color.accentBackground))
+                                .setTextColor(getResources().getColor(R.color.whiteAccent)).show();
+                        return;
                     }
-                } catch (JSONException e) {
-                    Log.d("WHATERR", e.getMessage());
-                    e.printStackTrace();
+                    binding.btnRegister.doneLoadingAnimation(getResources().getColor(R.color.blue), icon);
+                    User user = mapper.treeToValue(actualObj.get("user"), User.class);
+                    user.setLoginOption("MySQL");
+                    SharedPrefManager.getInstance(RegisterActivity.this).userLogin(user);
+                    startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
+                    finish();
+
                 } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    throw new RuntimeException(e);
                 }
             }
-        }
 
-        RegisterUser ru = new RegisterUser();
-        ru.execute();
+            @Override
+            public void onFailure(@NonNull Call<Object> call, @NonNull Throwable t) {
+                Log.d("Response Fail", "onFail: " + t.getMessage());
+                t.printStackTrace();
+            }
+        });
     }
 
-    private void addDataToDatabase() {
+    public static Bitmap drawableToBitmap(Drawable drawable) {
+        Bitmap bitmap = null;
 
-        final String username = Objects.requireNonNull(editTextUsername.getText()).toString();
-        final String email = Objects.requireNonNull(editTextEmail.getText()).toString();
-        final String password = Objects.requireNonNull(editTextPassword.getText()).toString();
-        final String repassword = Objects.requireNonNull(editTextRePassword.getText()).toString();
-
-        //first we will do the validations
-        if (TextUtils.isEmpty(username)) {
-            textLayoutUsername.setErrorEnabled(true);
-            textLayoutUsername.setError("*Username cannot be null or empty");
-            textLayoutUsername.requestFocus();
-            return;
-        } else if (TextUtils.isEmpty(email)) {
-            textLayoutUsername.setErrorEnabled(true);
-            textLayoutEmail.setError("*Email cannot be null or empty");
-            textLayoutEmail.requestFocus();
-            return;
-        } else if (TextUtils.isEmpty(password)) {
-            textLayoutUsername.setErrorEnabled(true);
-            textLayoutPassword.setError("*Password cannot be null or empty");
-            textLayoutPassword.requestFocus();
-            return;
-        } else if (TextUtils.isEmpty(repassword)) {
-            textLayoutUsername.setErrorEnabled(true);
-            textLayoutRePassword.setError("*Password does not match");
-            textLayoutRePassword.requestFocus();
-            return;
+        if (drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            if (bitmapDrawable.getBitmap() != null) {
+                return bitmapDrawable.getBitmap();
+            }
         }
 
-        // url to post our data
-        String url = "https://faunal-sources.000webhostapp.com/createUser.php";
+        if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888); // Single color bitmap will be created of 1x1 pixel
+        } else {
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        }
 
-        // creating a new variable for our request queue
-        RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
-
-        // on below line we are calling a string
-        // request method to post the data to our API
-        // in this we are calling a post method.
-        StringRequest request = new StringRequest(Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.e("TAG", "RESPONSE IS " + response);
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    // on below line we are displaying a success toast message.
-                    Toast.makeText(RegisterActivity.this, jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                // and setting data to edit text as empty
-                editTextUsername.setText("");
-                editTextEmail.setText("");
-                editTextPassword.setText("");
-                editTextRePassword.setText("");
-            }
-        }, new com.android.volley.Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // method to handle errors.
-                Log.d("WhatErr", error.toString());
-                Toast.makeText(RegisterActivity.this, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
-            }
-        }) {
-            @Override
-            public String getBodyContentType() {
-                // as we are passing data in the form of url encoded
-                // so we are passing the content type below
-                return "application/x-www-form-urlencoded; charset=UTF-8";
-            }
-
-            @Override
-            protected Map<String, String> getParams() {
-
-                // below line we are creating a map for storing
-                // our values in key and value pair.
-                Map<String, String> params = new HashMap<String, String>();
-
-                // on below line we are passing our
-                // key and value pair to our parameters.
-                params.put("username", username);
-                params.put("email", email);
-                params.put("password", password);
-
-                // at last we are returning our params.
-                return params;
-            }
-        };
-        // below line is to make
-        // a json object request.
-        queue.add(request);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
     }
 }

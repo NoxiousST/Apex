@@ -3,6 +3,10 @@ package com.test.apex.network;
 public class ServerAPI {
 
     public static final String ROOT_URL = "https://apex-admin.000webhostapp.com/";
+
+    public static final String URL_PRODUCT_IMAGE = ROOT_URL + "images/products/";
+    public static final String URL_USER_IMAGE = ROOT_URL + "images/users/";
+
     private static final String ROOT_URL_USER = ROOT_URL + "apiUsers.php?apicall=";
     private static final String ROOT_URL_PRODUCT = ROOT_URL + "apiProducts.php?apicall=";
     private static final String ROOT_URL_TRANSACTION = ROOT_URL + "apiTransactions.php?apicall=";
